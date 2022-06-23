@@ -1,0 +1,13 @@
+http://45.11.27.24/
+
+Водитель:
+Логин: ivanov_login
+Пароль: ivanov_pass
+
+Подписант:
+Логин: kuznecov_login
+Пароль: kuznecov_pass
+
+Админ:
+Логин: ELMIR.WEB
+Пароль: ELMIR.PASSWORD

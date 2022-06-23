@@ -1,21 +1,20 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.4
--- https://www.phpmyadmin.net/
+-- version 3.5.1
+-- http://www.phpmyadmin.net
 --
--- Хост: 127.0.0.1:3306
--- Время создания: Мар 26 2022 г., 18:59
--- Версия сервера: 5.5.62
--- Версия PHP: 7.1.33
+-- Хост: 127.0.0.1
+-- Время создания: Июн 23 2022 г., 14:44
+-- Версия сервера: 5.5.25
+-- Версия PHP: 5.3.13
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8 */;
 
 --
 -- База данных: `ogu-diplom`
@@ -27,10 +26,11 @@ SET time_zone = "+00:00";
 -- Структура таблицы `base`
 --
 
-CREATE TABLE `base` (
-  `ID` int(10) UNSIGNED NOT NULL,
-  `Name` varchar(50) COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+CREATE TABLE IF NOT EXISTS `base` (
+  `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `Name` varchar(50) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=5 ;
 
 --
 -- Дамп данных таблицы `base`
@@ -48,12 +48,14 @@ INSERT INTO `base` (`ID`, `Name`) VALUES
 -- Структура таблицы `car`
 --
 
-CREATE TABLE `car` (
-  `ID` int(10) UNSIGNED NOT NULL,
+CREATE TABLE IF NOT EXISTS `car` (
+  `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `Model` varchar(50) COLLATE utf8_bin NOT NULL,
   `Number` varchar(10) COLLATE utf8_bin NOT NULL,
-  `IDgarage` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  `IDgarage` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `IDgarage` (`IDgarage`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=5 ;
 
 --
 -- Дамп данных таблицы `car`
@@ -71,7 +73,7 @@ INSERT INTO `car` (`ID`, `Model`, `Number`, `IDgarage`) VALUES
 -- Структура таблицы `checkconnect`
 --
 
-CREATE TABLE `checkconnect` (
+CREATE TABLE IF NOT EXISTS `checkconnect` (
   `statusConnect` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -88,11 +90,13 @@ INSERT INTO `checkconnect` (`statusConnect`) VALUES
 -- Структура таблицы `garage`
 --
 
-CREATE TABLE `garage` (
-  `ID` int(10) UNSIGNED NOT NULL,
+CREATE TABLE IF NOT EXISTS `garage` (
+  `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `Name` varchar(50) COLLATE utf8_bin NOT NULL,
-  `IDbase` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  `IDbase` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `IDbase` (`IDbase`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=4 ;
 
 --
 -- Дамп данных таблицы `garage`
@@ -109,11 +113,12 @@ INSERT INTO `garage` (`ID`, `Name`, `IDbase`) VALUES
 -- Структура таблицы `gsm`
 --
 
-CREATE TABLE `gsm` (
-  `ID` int(10) UNSIGNED NOT NULL,
+CREATE TABLE IF NOT EXISTS `gsm` (
+  `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `Name` varchar(50) COLLATE utf8_bin NOT NULL,
-  `ForKilo` decimal(10,3) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  `ForKilo` decimal(10,3) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=4 ;
 
 --
 -- Дамп данных таблицы `gsm`
@@ -130,10 +135,11 @@ INSERT INTO `gsm` (`ID`, `Name`, `ForKilo`) VALUES
 -- Структура таблицы `positions`
 --
 
-CREATE TABLE `positions` (
-  `ID` int(10) UNSIGNED NOT NULL,
-  `Role` varchar(30) COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+CREATE TABLE IF NOT EXISTS `positions` (
+  `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `Role` varchar(30) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=4 ;
 
 --
 -- Дамп данных таблицы `positions`
@@ -151,15 +157,20 @@ INSERT INTO `positions` (`ID`, `Role`) VALUES
 -- Структура таблицы `record`
 --
 
-CREATE TABLE `record` (
-  `ID` int(10) UNSIGNED NOT NULL,
-  `IDsheet` int(10) UNSIGNED NOT NULL,
-  `IDcar` int(10) UNSIGNED NOT NULL,
-  `IDdriver` int(10) UNSIGNED NOT NULL,
+CREATE TABLE IF NOT EXISTS `record` (
+  `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `IDsheet` int(10) unsigned NOT NULL,
+  `IDcar` int(10) unsigned NOT NULL,
+  `IDdriver` int(10) unsigned NOT NULL,
   `NumberPL` varchar(10) COLLATE utf8_bin NOT NULL,
-  `IDgsm` int(10) UNSIGNED NOT NULL,
-  `Liter` decimal(10,3) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  `IDgsm` int(10) unsigned NOT NULL,
+  `Liter` decimal(10,3) NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `IDsheet` (`IDsheet`),
+  KEY `IDcar` (`IDcar`),
+  KEY `IDgsm` (`IDgsm`),
+  KEY `IDdriver` (`IDdriver`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=7 ;
 
 --
 -- Дамп данных таблицы `record`
@@ -179,13 +190,16 @@ INSERT INTO `record` (`ID`, `IDsheet`, `IDcar`, `IDdriver`, `NumberPL`, `IDgsm`,
 -- Структура таблицы `sheet`
 --
 
-CREATE TABLE `sheet` (
-  `ID` int(10) UNSIGNED NOT NULL,
+CREATE TABLE IF NOT EXISTS `sheet` (
+  `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `NumberSheet` varchar(10) COLLATE utf8_bin NOT NULL,
   `DateSheet` date NOT NULL,
-  `IDgarage` int(10) UNSIGNED NOT NULL,
-  `IDsigner` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  `IDgarage` int(10) unsigned NOT NULL,
+  `IDsigner` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `IDgarage` (`IDgarage`),
+  KEY `IDsigner` (`IDsigner`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=4 ;
 
 --
 -- Дамп данных таблицы `sheet`
@@ -202,140 +216,29 @@ INSERT INTO `sheet` (`ID`, `NumberSheet`, `DateSheet`, `IDgarage`, `IDsigner`) V
 -- Структура таблицы `worker`
 --
 
-CREATE TABLE `worker` (
-  `ID` int(10) UNSIGNED NOT NULL,
+CREATE TABLE IF NOT EXISTS `worker` (
+  `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `FIO` varchar(101) COLLATE utf8_bin NOT NULL,
   `loginUser` varchar(20) COLLATE utf8_bin NOT NULL,
   `passwordUser` varchar(30) COLLATE utf8_bin NOT NULL,
-  `Function` int(10) UNSIGNED NOT NULL DEFAULT '1',
-  `IDbase` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  `Function` int(10) unsigned NOT NULL DEFAULT '1',
+  `IDbase` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `IDbase` (`IDbase`),
+  KEY `Function` (`Function`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=34 ;
 
 --
 -- Дамп данных таблицы `worker`
 --
 
 INSERT INTO `worker` (`ID`, `FIO`, `loginUser`, `passwordUser`, `Function`, `IDbase`) VALUES
-(1, 'Иванов А.С.', 'ivanov_test', 'ivanov__test', 1, 1),
+(1, 'Иванов А.С.', 'ivanov_login', 'ivanov_pass', 1, 1),
 (2, 'Петров В.М.', 'petrov_test', 'petrov__test', 1, 1),
 (3, 'Сидоров В.М.', 'sidorov_test', 'sidorov__test', 1, 2),
-(4, 'Кузнецов А.Б.', 'kuznecov_test', 'kuznecov__test', 2, 1),
+(4, 'Кузнецов А.Б.', 'kuznecov_login', 'kuznecov_pass', 2, 1),
 (5, 'Васильев С.К.', 'vasiliev_test', 'vasiliev__test', 2, 2),
-(33, 'Кубагушев Эльмир Ирекович', 'ELMIR.WEB', 'ELMIR.PASSWORD', 2, 0);
-
---
--- Индексы сохранённых таблиц
---
-
---
--- Индексы таблицы `base`
---
-ALTER TABLE `base`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Индексы таблицы `car`
---
-ALTER TABLE `car`
-  ADD PRIMARY KEY (`ID`),
-  ADD KEY `IDgarage` (`IDgarage`);
-
---
--- Индексы таблицы `garage`
---
-ALTER TABLE `garage`
-  ADD PRIMARY KEY (`ID`),
-  ADD KEY `IDbase` (`IDbase`);
-
---
--- Индексы таблицы `gsm`
---
-ALTER TABLE `gsm`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Индексы таблицы `positions`
---
-ALTER TABLE `positions`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Индексы таблицы `record`
---
-ALTER TABLE `record`
-  ADD PRIMARY KEY (`ID`),
-  ADD KEY `IDsheet` (`IDsheet`),
-  ADD KEY `IDcar` (`IDcar`),
-  ADD KEY `IDgsm` (`IDgsm`),
-  ADD KEY `IDdriver` (`IDdriver`);
-
---
--- Индексы таблицы `sheet`
---
-ALTER TABLE `sheet`
-  ADD PRIMARY KEY (`ID`),
-  ADD KEY `IDgarage` (`IDgarage`),
-  ADD KEY `IDsigner` (`IDsigner`);
-
---
--- Индексы таблицы `worker`
---
-ALTER TABLE `worker`
-  ADD PRIMARY KEY (`ID`),
-  ADD KEY `IDbase` (`IDbase`),
-  ADD KEY `Function` (`Function`);
-
---
--- AUTO_INCREMENT для сохранённых таблиц
---
-
---
--- AUTO_INCREMENT для таблицы `base`
---
-ALTER TABLE `base`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT для таблицы `car`
---
-ALTER TABLE `car`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT для таблицы `garage`
---
-ALTER TABLE `garage`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT для таблицы `gsm`
---
-ALTER TABLE `gsm`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT для таблицы `positions`
---
-ALTER TABLE `positions`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT для таблицы `record`
---
-ALTER TABLE `record`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT для таблицы `sheet`
---
-ALTER TABLE `sheet`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT для таблицы `worker`
---
-ALTER TABLE `worker`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+(33, 'Кубагушев Эльмир Ирекович', 'ELMIR.WEB', 'ELMIR.PASSWORD', 3, 0);
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
@@ -375,7 +278,6 @@ ALTER TABLE `sheet`
 ALTER TABLE `worker`
   ADD CONSTRAINT `worker_ibfk_1` FOREIGN KEY (`IDbase`) REFERENCES `base` (`ID`),
   ADD CONSTRAINT `worker_ibfk_2` FOREIGN KEY (`Function`) REFERENCES `positions` (`ID`);
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

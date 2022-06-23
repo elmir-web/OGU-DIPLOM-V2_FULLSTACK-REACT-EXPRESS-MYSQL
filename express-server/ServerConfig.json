@@ -3,9 +3,9 @@
   "SERVER_START_ON_PORT": "8080",
   "SERVER_WORKIN_ON_ADRESS": "http://localhost",
   "SERVER_MYSQL_SETTINGS": {
-    "host": "79.140.29.53",
-    "user": "barxtaqc_elmir",
-    "database": "barxtaqc_ogu-diplom",
-    "password": "12345"
+    "host": "localhost",
+    "user": "root",
+    "database": "ogu-diplom",
+    "password": ""
   }
 }

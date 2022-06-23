@@ -29,7 +29,7 @@ app.listen(SERVER_START_ON_PORT, async () => {
   try {
     global.connectMySQL = await mysql.createPool(SERVER_MYSQL_SETTINGS); // Создаем Pool подключения к СуБД MySQL
 
-    global.checkSQL = `SELECT * FROM checkConnect`; // Формируем тестовый SQL-запрос
+    global.checkSQL = `SELECT * FROM checkconnect`; // Формируем тестовый SQL-запрос
 
     // Результат запроса будет массив с одним элементом, забираем этот элемент деструктуризацией массивов
     // Этот элемент будет объектом, одной единственной строчкой из таблицы "checkConnect" с одним единственным
