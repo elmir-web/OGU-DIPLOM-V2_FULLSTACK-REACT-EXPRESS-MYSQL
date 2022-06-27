@@ -74,6 +74,7 @@ const Autos = ({ funcRequest }) => {
               <th>Гараж (ID)</th>
               <th>Пробег</th>
               <th>Количество литров</th>
+              <th>Расход</th>
               <th>Действие</th>
             </tr>
           </thead>
@@ -93,6 +94,7 @@ const Autos = ({ funcRequest }) => {
                     </td>
                     <td>{veh.mileage}</td>
                     <td>{veh.liters}</td>
+                    <td>{veh.expense}</td>
                     <td className="table-buttons">
                       <Button
                         variant="outlined"
@@ -256,7 +258,6 @@ const Autos = ({ funcRequest }) => {
                 ? ` - Модель: ${createVehicle.Model} | Гос.номер: ${createVehicle.Number}`
                 : ""}
             </h4>
-
             <TextField
               id="standard-basic"
               label="Введите модель автомобиля"
@@ -270,7 +271,6 @@ const Autos = ({ funcRequest }) => {
                 });
               }}
             />
-
             <TextField
               id="standard-basic"
               label="Введите гос.номер автомобиля"
@@ -284,7 +284,6 @@ const Autos = ({ funcRequest }) => {
                 });
               }}
             />
-
             <FormControl fullWidth sx={{ mt: 1 }}>
               <InputLabel id="auto-create-select-auto-garage">
                 Выберите вид ГСМ
@@ -328,7 +327,6 @@ const Autos = ({ funcRequest }) => {
                 })}
               </Select>
             </FormControl>
-
             <FormControl fullWidth sx={{ mt: 1 }}>
               <InputLabel id="auto-create-select-auto-garage">
                 Выберите автогараж
@@ -372,7 +370,6 @@ const Autos = ({ funcRequest }) => {
                 })}
               </Select>
             </FormControl>
-
             <TextField
               id="standard-basic"
               label="Введите пробег автомобиля"
@@ -386,7 +383,6 @@ const Autos = ({ funcRequest }) => {
                 });
               }}
             />
-
             <TextField
               id="standard-basic"
               label="Введите количество литров"
@@ -397,6 +393,20 @@ const Autos = ({ funcRequest }) => {
                 setCreateVehicle({
                   ...createVehicle,
                   liters: e.target.value,
+                });
+              }}
+            />
+
+            <TextField
+              id="standard-basic"
+              label="Введите расход"
+              variant="standard"
+              fullWidth
+              sx={{ mt: 1 }}
+              onChange={(e) => {
+                setCreateVehicle({
+                  ...createVehicle,
+                  expense: e.target.value,
                 });
               }}
             />

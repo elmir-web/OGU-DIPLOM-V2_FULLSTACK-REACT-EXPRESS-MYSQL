@@ -4,10 +4,11 @@ class VehicleController {
   }
 
   async createVehicle(req, res) {
-    const { Model, Number, IDgsm, IDgarage, mileage, liters } = req.body;
+    const { Model, Number, IDgsm, IDgarage, mileage, liters, expense } =
+      req.body;
 
     await global.connectMySQL.execute(
-      `INSERT INTO car (Model, Number, IDgsm, IDgarage, mileage, liters) VALUES ('${Model}', '${Number}', '${IDgsm}', '${IDgarage}', '${mileage}', '${liters}')`
+      `INSERT INTO car (Model, Number, IDgsm, IDgarage, mileage, liters, expense) VALUES ('${Model}', '${Number}', '${IDgsm}', '${IDgarage}', '${mileage}', '${liters}', '${expense}')`
     );
 
     res

@@ -112,6 +112,20 @@ async function eventCreatedAuto(
     return;
   }
 
+  if (
+    !("expense" in createVehicle) ||
+    !window.isValidDouble(createVehicle.expense)
+  ) {
+    new Toast({
+      title: "Ошибка при создании транспорта",
+      text: `Поле ввода расхода не должно быть пустым и должно иметь в себе число вида 3.54`,
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
+    return;
+  }
+
   let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
   let responseFetch = await fetch(`${CONFIG.URL_BACKEND}/api/vehicle/create`, {
@@ -126,28 +140,26 @@ async function eventCreatedAuto(
   const { ok, status } = responseFetch;
   responseFetch = await responseFetch.json();
 
-  console.log(ok, status, responseFetch);
+  setCreateVehicle(null);
 
-  // setCreateVehicle(null);
+  if (ok === false && status === 400) {
+    new Toast({
+      title: "Ошибка при создании автомобиля",
+      text: responseFetch,
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
+    return;
+  }
 
-  // if (response.ok === false && response.status === 400) {
-  //   new Toast({
-  //     title: "Ошибка при создании автомобиля",
-  //     text: response.responseFetch,
-  //     theme: "danger",
-  //     autohide: true,
-  //     interval: 10000,
-  //   });
-  //   return;
-  // }
-
-  // new Toast({
-  //   title: "Вас ждет успех!",
-  //   text: response.responseFetch,
-  //   theme: "success",
-  //   autohide: true,
-  //   interval: 10000,
-  // });
+  new Toast({
+    title: "Вас ждет успех!",
+    text: responseFetch,
+    theme: "success",
+    autohide: true,
+    interval: 10000,
+  });
 
   loadVehicles();
 }
