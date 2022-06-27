@@ -10,12 +10,16 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Toast from "./../../../../Toast";
 
+import CONFIG from "./../../../../CONFIG.json";
+
+import "./Workers.scss";
+
 import deleteWorker from "./DeleteWorker";
 import beginUpdateWorker from "./BeginUpdateWorker";
 import eventChangedWorker from "./EventChangedWorker";
 import eventCreatedWorker from "./EventCreatedWorker";
 
-const Workers = ({ funcRequest, workerAccount, dashboardExit }) => {
+const Workers = ({ workerAccount, dashboardExit }) => {
   let [statusAccessEditing, setStatusAccessEditing] = useState(false);
   let [allWorkers, setWorkers] = useState([]);
   let [allAutoBases, setAutoBases] = useState([]);
@@ -37,31 +41,42 @@ const Workers = ({ funcRequest, workerAccount, dashboardExit }) => {
   async function loadWorkers() {
     let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
-    const tempGetAccess = await funcRequest(
-      "/api/worker/access",
-      "GET",
-      null,
-      tempUserAuthCookie
-    );
+    let tempGetAccess = await fetch(`${CONFIG.URL_BACKEND}/api/worker/access`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${tempUserAuthCookie}`,
+      },
+    });
 
-    setStatusAccessEditing(tempGetAccess.responseFetch.access);
+    const { ok, status } = tempGetAccess;
 
-    const workers = await funcRequest(`/api/workers/get`, "GET", null, null);
+    tempGetAccess = await tempGetAccess.json();
 
-    setWorkers(workers.responseFetch);
+    setStatusAccessEditing(tempGetAccess.access);
 
-    const autoBases = await funcRequest(`/api/autobase/get`, "GET", null, null);
+    let workers = await fetch(`${CONFIG.URL_BACKEND}/api/workers/get`, {
+      method: "GET",
+    });
 
-    setAutoBases(autoBases.responseFetch);
+    workers = await workers.json();
 
-    const positions = await funcRequest(
-      `/api/positions/get`,
-      "GET",
-      null,
-      null
-    );
+    setWorkers(workers);
 
-    setPositions(positions.responseFetch);
+    let autoBases = await fetch(`${CONFIG.URL_BACKEND}/api/autobase/get`, {
+      method: "GET",
+    });
+
+    autoBases = await autoBases.json();
+
+    setAutoBases(autoBases);
+
+    let positions = await fetch(`${CONFIG.URL_BACKEND}/api/positions/get`, {
+      method: "GET",
+    });
+
+    positions = await positions.json();
+
+    setPositions(positions);
   }
 
   return (
@@ -98,7 +113,7 @@ const Workers = ({ funcRequest, workerAccount, dashboardExit }) => {
                     <td>
                       {worker.IDbase.Name} ({worker.IDbase.ID})
                     </td>
-                    <td>
+                    <td className="table-buttons">
                       <Button
                         variant="outlined"
                         color="error"
@@ -106,7 +121,6 @@ const Workers = ({ funcRequest, workerAccount, dashboardExit }) => {
                         onClick={() => {
                           deleteWorker(
                             worker,
-                            funcRequest,
                             loadWorkers,
                             statusAccessEditing,
                             workerAccount,
@@ -321,7 +335,6 @@ const Workers = ({ funcRequest, workerAccount, dashboardExit }) => {
                     eventChangedWorker(
                       inputObjectWorker,
                       changedWorker,
-                      funcRequest,
                       setChangedWorker,
                       setInputObjectWorker,
                       loadWorkers,
@@ -512,12 +525,7 @@ const Workers = ({ funcRequest, workerAccount, dashboardExit }) => {
               sx={{ mt: 1 }}
               fullWidth
               onClick={() =>
-                eventCreatedWorker(
-                  createWorker,
-                  funcRequest,
-                  loadWorkers,
-                  setCreateWorker
-                )
+                eventCreatedWorker(createWorker, loadWorkers, setCreateWorker)
               }
             >
               Создать

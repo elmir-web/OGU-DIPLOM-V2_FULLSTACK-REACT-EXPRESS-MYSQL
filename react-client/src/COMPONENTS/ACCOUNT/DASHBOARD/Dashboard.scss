@@ -164,6 +164,11 @@
     }
 
     .table-buttons {
+      button:nth-child(2) {
+        margin-left: 8px;
+        margin-top: 0;
+      }
+
       @media (max-width: 767px) {
         display: flex;
         flex-direction: column;

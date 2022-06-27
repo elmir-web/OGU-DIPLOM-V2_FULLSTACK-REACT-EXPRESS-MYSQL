@@ -1,12 +1,9 @@
 import Cookies from "js-cookie";
 import Toast from "./../../../../Toast";
 
-async function eventCreatedWorker(
-  createWorker,
-  funcRequest,
-  loadWorkers,
-  setCreateWorker
-) {
+import CONFIG from "./../../../../CONFIG.json";
+
+async function eventCreatedWorker(createWorker, loadWorkers, setCreateWorker) {
   if (createWorker === null) {
     new Toast({
       title: "Ошибка при создании сотрудника",
@@ -94,17 +91,24 @@ async function eventCreatedWorker(
   }
   let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
-  const response = await funcRequest(
-    `/api/worker/create`,
-    "POST",
-    createWorker,
-    tempUserAuthCookie
-  );
+  console.log(createWorker);
 
-  if (response.ok === false && response.status === 400) {
+  let responseFetch = await fetch(`${CONFIG.URL_BACKEND}/api/worker/create`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${tempUserAuthCookie}`,
+    },
+    body: JSON.stringify(createWorker),
+  });
+
+  const { ok, status } = responseFetch;
+  responseFetch = await responseFetch.json();
+
+  if (ok === false && status === 400) {
     new Toast({
       title: "Ошибка при создании сотрудника",
-      text: response.responseFetch,
+      text: responseFetch,
       theme: "danger",
       autohide: true,
       interval: 10000,
@@ -114,7 +118,7 @@ async function eventCreatedWorker(
 
   new Toast({
     title: "Вас ждет успех!",
-    text: response.responseFetch,
+    text: responseFetch,
     theme: "success",
     autohide: true,
     interval: 10000,

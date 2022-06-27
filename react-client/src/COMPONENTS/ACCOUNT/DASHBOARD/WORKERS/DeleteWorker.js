@@ -1,9 +1,10 @@
 import Toast from "./../../../../Toast";
 import Cookies from "js-cookie";
 
+import CONFIG from "./../../../../CONFIG.json";
+
 async function deleteWorker(
   worker,
-  funcRequest,
   loadWorkers,
   statusAccessEditing,
   workerAccount,
@@ -22,17 +23,24 @@ async function deleteWorker(
 
   let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
-  const response = await funcRequest(
-    `/api/worker/delete/${worker.ID}`,
-    "DELETE",
-    null,
-    tempUserAuthCookie
+  let responseFetch = await fetch(
+    `${CONFIG.URL_BACKEND}/api/worker/delete/${worker.ID}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${tempUserAuthCookie}`,
+      },
+    }
   );
 
-  if (response.ok === false && response.status === 400) {
+  const { ok, status } = responseFetch;
+
+  responseFetch = await responseFetch.json();
+
+  if (ok === false && status === 400) {
     new Toast({
       title: "Ошибка при удалении сотрудника",
-      text: response.responseFetch,
+      text: responseFetch,
       theme: "danger",
       autohide: true,
       interval: 10000,
@@ -42,7 +50,7 @@ async function deleteWorker(
 
   new Toast({
     title: "Вас ждет успех!",
-    text: response.responseFetch,
+    text: responseFetch,
     theme: "success",
     autohide: true,
     interval: 10000,

@@ -165,7 +165,6 @@ const Dashboard = ({ funcRequest, workerAccount, setWorkerAccount }) => {
               path="workers"
               element={
                 <Workers
-                  funcRequest={funcRequest}
                   workerAccount={workerAccount}
                   dashboardExit={dashboardExit}
                 />
