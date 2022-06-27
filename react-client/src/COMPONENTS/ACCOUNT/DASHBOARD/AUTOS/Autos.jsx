@@ -61,8 +61,6 @@ const Autos = ({}) => {
 
     setVehicles(vehicles);
 
-    console.log(vehicles);
-
     let typesGSM = await fetch(`${CONFIG.URL_BACKEND}/api/type-gsm/get`, {
       method: "GET",
     });
