@@ -11,6 +11,8 @@ import Select from "@mui/material/Select";
 import Toast from "./../../../../Toast";
 import MenuItem from "@mui/material/MenuItem";
 
+import "./Sheets.scss";
+
 import deleteSheet from "./DeleteSheet";
 import beginUpdateSheet from "./BeginUpdateSheet";
 import eventChangedSheet from "./EventChangedSheet";
@@ -82,7 +84,7 @@ const Sheets = ({ funcRequest, workerAccount }) => {
                     <td>
                       {sheet.IDsigner.FIO} ({sheet.IDsigner.ID})
                     </td>
-                    <td>
+                    <td className="table-buttons">
                       <Button
                         variant="outlined"
                         color="error"
