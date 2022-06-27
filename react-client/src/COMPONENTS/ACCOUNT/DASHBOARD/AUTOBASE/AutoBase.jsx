@@ -14,7 +14,7 @@ import beginUpdateAutoBase from "./BeginUpdateAutoBase";
 import eventChangedAutoBase from "./EventChangedAutoBase";
 import eventCreatedAutoBase from "./EventCreatedAutoBase";
 
-const AutoBase = ({ funcRequest }) => {
+const AutoBase = ({}) => {
   let [allAutoBases, setAutoBases] = useState([]);
   let [statusAccessEditing, setStatusAccessEditing] = useState(false);
   let [changedAutoBase, setChangedAutoBase] = useState(null);

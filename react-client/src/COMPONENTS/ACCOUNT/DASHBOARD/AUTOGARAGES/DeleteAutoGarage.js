@@ -1,9 +1,10 @@
 import Toast from "./../../../../Toast";
 import Cookies from "js-cookie";
 
+import CONFIG from "./../../../../CONFIG.json";
+
 async function deleteAutoGarage(
   autogarage = null,
-  funcRequest,
   loadAutoGarages,
   statusAccessEditing
 ) {
@@ -20,17 +21,23 @@ async function deleteAutoGarage(
 
   let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
-  const response = await funcRequest(
-    `/api/autogarage/delete/${autogarage.ID}`,
-    "DELETE",
-    null,
-    tempUserAuthCookie
+  let responseFetch = await fetch(
+    `${CONFIG.URL_BACKEND}/api/autogarage/delete/${autogarage.ID}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${tempUserAuthCookie}`,
+      },
+    }
   );
 
-  if (response.ok === false && response.status === 400) {
+  const { ok, status } = responseFetch;
+  responseFetch = await responseFetch.json();
+
+  if (ok === false && status === 400) {
     new Toast({
       title: "Ошибка при удалении гаража",
-      text: response.responseFetch,
+      text: responseFetch,
       theme: "danger",
       autohide: true,
       interval: 10000,
@@ -40,7 +47,7 @@ async function deleteAutoGarage(
 
   new Toast({
     title: "Вас ждет успех!",
-    text: response.responseFetch,
+    text: responseFetch,
     theme: "success",
     autohide: true,
     interval: 10000,

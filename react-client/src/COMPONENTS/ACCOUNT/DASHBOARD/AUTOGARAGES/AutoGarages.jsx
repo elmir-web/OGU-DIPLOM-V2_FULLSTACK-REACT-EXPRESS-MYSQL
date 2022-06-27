@@ -10,12 +10,16 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Toast from "./../../../../Toast";
 
+import CONFIG from "./../../../../CONFIG.json";
+
+import "./AutoGarages.scss";
+
 import deleteAutoGarage from "./DeleteAutoGarage";
 import beginUpdateAutoGaraga from "./BeginUpdateAutoGarage";
 import eventChangedAutoGarage from "./EventChangedAutoGarage";
 import eventCreatedAutoGarage from "./EventCreatedAutoGarage";
 
-const AutoGarages = ({ funcRequest }) => {
+const AutoGarages = ({}) => {
   let [allAutoGarages, setAutoGarages] = useState([]);
   let [statusAccessEditing, setStatusAccessEditing] = useState(false);
   let [changedAutoGarage, setChangedAutoGarage] = useState(null);
@@ -33,27 +37,35 @@ const AutoGarages = ({ funcRequest }) => {
   async function loadAutoGarages() {
     let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
-    const tempGetAccess = await funcRequest(
-      "/api/autogarage/access",
-      "GET",
-      null,
-      tempUserAuthCookie
+    let tempGetAccess = await fetch(
+      `${CONFIG.URL_BACKEND}/api/autogarage/access`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${tempUserAuthCookie}`,
+        },
+      }
     );
 
-    setStatusAccessEditing(tempGetAccess.responseFetch.access);
+    tempGetAccess = await tempGetAccess.json();
 
-    const autoGarages = await funcRequest(
-      `/api/autogarage/get`,
-      "GET",
-      null,
-      null
-    );
+    setStatusAccessEditing(tempGetAccess.access);
 
-    setAutoGarages(autoGarages.responseFetch);
+    let autoGarages = await fetch(`${CONFIG.URL_BACKEND}/api/autogarage/get`, {
+      method: "GET",
+    });
 
-    const autoBases = await funcRequest(`/api/autobase/get`);
+    autoGarages = await autoGarages.json();
 
-    setAutoBases(autoBases.responseFetch);
+    setAutoGarages(autoGarages);
+
+    let autoBases = await fetch(`${CONFIG.URL_BACKEND}/api/autobase/get`, {
+      method: "GET",
+    });
+
+    autoBases = await autoBases.json();
+
+    setAutoBases(autoBases);
   }
 
   return (
@@ -78,7 +90,7 @@ const AutoGarages = ({ funcRequest }) => {
                     <td>
                       {autogarage.IDbase.Name} ({autogarage.IDbase.ID})
                     </td>
-                    <td>
+                    <td className="table-buttons">
                       <Button
                         variant="outlined"
                         color="error"
@@ -86,7 +98,6 @@ const AutoGarages = ({ funcRequest }) => {
                         onClick={() =>
                           deleteAutoGarage(
                             autogarage,
-                            funcRequest,
                             loadAutoGarages,
                             statusAccessEditing
                           )
@@ -171,6 +182,14 @@ const AutoGarages = ({ funcRequest }) => {
                           interval: 10000,
                         });
 
+                        let tempThisGarage = {
+                          ...inputObjectAutoGarage,
+                          ID: changedAutoGarage.ID,
+                          IDbase: -1,
+                        };
+
+                        setInputObjectAutoGarage(tempThisGarage);
+
                         return;
                       }
 
@@ -204,7 +223,6 @@ const AutoGarages = ({ funcRequest }) => {
                   fullWidth
                   onClick={() => {
                     eventChangedAutoGarage(
-                      funcRequest,
                       loadAutoGarages,
                       inputObjectAutoGarage,
                       setChangedAutoGarage,
@@ -259,6 +277,8 @@ const AutoGarages = ({ funcRequest }) => {
                       interval: 10000,
                     });
 
+                    setCreateAutoBase({ ...createAutoBase, IDbase: -1 });
+
                     return;
                   }
 
@@ -286,7 +306,6 @@ const AutoGarages = ({ funcRequest }) => {
               fullWidth
               onClick={() =>
                 eventCreatedAutoGarage(
-                  funcRequest,
                   loadAutoGarages,
                   createAutoBase,
                   setCreateAutoBase

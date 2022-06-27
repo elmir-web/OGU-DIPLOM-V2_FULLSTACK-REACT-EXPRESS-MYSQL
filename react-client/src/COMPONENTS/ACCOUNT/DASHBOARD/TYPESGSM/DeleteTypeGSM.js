@@ -1,9 +1,10 @@
 import Toast from "./../../../../Toast";
 import Cookies from "js-cookie";
 
+import CONFIG from "./../../../../CONFIG.json";
+
 async function deleteTypeGSM(
   itemGsm = null,
-  funcRequest,
   loadTypesGSM,
   statusAccessEditing
 ) {
@@ -20,17 +21,23 @@ async function deleteTypeGSM(
 
   let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
-  const response = await funcRequest(
-    `/api/type-gsm/delete/${itemGsm.ID}`,
-    "DELETE",
-    null,
-    tempUserAuthCookie
+  let responseFetch = await fetch(
+    `${CONFIG.URL_BACKEND}/api/type-gsm/delete/${itemGsm.ID}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${tempUserAuthCookie}`,
+      },
+    }
   );
 
-  if (response.ok === false && response.status === 400) {
+  const { ok, status } = responseFetch;
+  responseFetch = await responseFetch.json();
+
+  if (ok === false && status === 400) {
     new Toast({
       title: "Ошибка при удалении типа ГСМ",
-      text: response.responseFetch,
+      text: responseFetch,
       theme: "danger",
       autohide: true,
       interval: 10000,
@@ -40,7 +47,7 @@ async function deleteTypeGSM(
 
   new Toast({
     title: "Вас ждет успех!",
-    text: response.responseFetch,
+    text: responseFetch,
     theme: "success",
     autohide: true,
     interval: 10000,

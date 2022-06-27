@@ -4,10 +4,10 @@ class VehicleController {
   }
 
   async createVehicle(req, res) {
-    const { Model, Number, IDgarage } = req.body;
+    const { Model, Number, IDgsm, IDgarage, mileage, liters } = req.body;
 
     await global.connectMySQL.execute(
-      `INSERT INTO car (Model, Number, IDgarage) VALUES ('${Model}', '${Number}', '${IDgarage}')`
+      `INSERT INTO car (Model, Number, IDgsm, IDgarage, mileage, liters) VALUES ('${Model}', '${Number}', '${IDgsm}', '${IDgarage}', '${mileage}', '${liters}')`
     );
 
     res
@@ -19,6 +19,14 @@ class VehicleController {
 
   async getVehicles(req, res) {
     let [rowsAllVeh] = await global.connectMySQL.execute(`SELECT * FROM car`);
+
+    for (let index = 0; index < rowsAllVeh.length; index++) {
+      rowsAllVeh[index].IDgsm = await global.funcRequest(
+        `/api/type-gsm/get/${rowsAllVeh[index].IDgsm}`,
+        "GET",
+        null
+      );
+    }
 
     for (let index = 0; index < rowsAllVeh.length; index++) {
       rowsAllVeh[index].IDgarage = await global.funcRequest(

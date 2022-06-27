@@ -10,6 +10,8 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Toast from "./../../../../Toast";
 
+import "./Autos.scss";
+
 import deleteVehicle from "./DeleteAuto";
 import beginUpdateVeh from "./BeginUpdateAuto";
 import eventChangedAuto from "./EventChangedAuto";
@@ -18,6 +20,7 @@ import eventCreatedAuto from "./EventCreatedAuto";
 const Autos = ({ funcRequest }) => {
   let [statusAccessEditing, setStatusAccessEditing] = useState(false);
   let [allVehicles, setVehicles] = useState([]);
+  let [allTypesGSM, setTypesGSM] = useState([]);
   let [allAutoGarages, setAutoGarages] = useState([]);
   let [changedVehicle, setChangedVehicle] = useState(null);
   let [inputObjectVehicle, setInputObjectVehicle] = useState({
@@ -47,6 +50,12 @@ const Autos = ({ funcRequest }) => {
 
     setVehicles(vehicles.responseFetch);
 
+    console.log(vehicles.responseFetch);
+
+    const typesGSM = await funcRequest(`/api/type-gsm/get`);
+
+    setTypesGSM(typesGSM.responseFetch);
+
     const autoGarages = await funcRequest(`/api/autogarage/get`);
 
     setAutoGarages(autoGarages.responseFetch);
@@ -61,7 +70,10 @@ const Autos = ({ funcRequest }) => {
               <th>ID</th>
               <th>Модель</th>
               <th>Гос.номер</th>
+              <th>Вид ГСМ</th>
               <th>Гараж (ID)</th>
+              <th>Пробег</th>
+              <th>Количество литров</th>
               <th>Действие</th>
             </tr>
           </thead>
@@ -74,9 +86,14 @@ const Autos = ({ funcRequest }) => {
                     <td>{veh.Model}</td>
                     <td>{veh.Number}</td>
                     <td>
-                      {veh.IDgarage.Name} ({veh.IDgarage.ID})
+                      {veh.IDgsm.Name} ({veh.IDgsm.ID})
                     </td>
                     <td>
+                      {veh.IDgarage.Name} ({veh.IDgarage.ID})
+                    </td>
+                    <td>{veh.mileage}</td>
+                    <td>{veh.liters}</td>
+                    <td className="table-buttons">
                       <Button
                         variant="outlined"
                         color="error"
@@ -270,6 +287,50 @@ const Autos = ({ funcRequest }) => {
 
             <FormControl fullWidth sx={{ mt: 1 }}>
               <InputLabel id="auto-create-select-auto-garage">
+                Выберите вид ГСМ
+              </InputLabel>
+              <Select
+                labelId="auto-create-select-auto-garage"
+                label="Выберите вид ГСМ"
+                defaultValue={99999}
+                onChange={(e) => {
+                  let tempTypeGSM = e.target.value;
+
+                  if (tempTypeGSM === 99999) {
+                    new Toast({
+                      title: "Ошибка при выборе",
+                      text: "Этот пукнт не доступен к выбору",
+                      theme: "danger",
+                      autohide: true,
+                      interval: 10000,
+                    });
+
+                    setCreateVehicle({
+                      ...createVehicle,
+                      IDgsm: -1,
+                    });
+                    return;
+                  }
+
+                  setCreateVehicle({
+                    ...createVehicle,
+                    IDgsm: tempTypeGSM,
+                  });
+                }}
+              >
+                <MenuItem value={99999}>Выберите вид ГСМ</MenuItem>
+                {allTypesGSM.map((typeGSM) => {
+                  return (
+                    <MenuItem key={typeGSM.ID} value={typeGSM.ID}>
+                      {typeGSM.Name} | Вес в кг: {typeGSM.ForKilo}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+
+            <FormControl fullWidth sx={{ mt: 1 }}>
+              <InputLabel id="auto-create-select-auto-garage">
                 Выберите автогараж
               </InputLabel>
               <Select
@@ -288,6 +349,10 @@ const Autos = ({ funcRequest }) => {
                       interval: 10000,
                     });
 
+                    setCreateVehicle({
+                      ...createVehicle,
+                      IDgarage: -1,
+                    });
                     return;
                   }
 
@@ -297,7 +362,7 @@ const Autos = ({ funcRequest }) => {
                   });
                 }}
               >
-                <MenuItem value={99999}>Выберите гараж</MenuItem>
+                <MenuItem value={99999}>Выберите автогараж</MenuItem>
                 {allAutoGarages.map((autogarage) => {
                   return (
                     <MenuItem key={autogarage.ID} value={autogarage.ID}>
@@ -307,6 +372,34 @@ const Autos = ({ funcRequest }) => {
                 })}
               </Select>
             </FormControl>
+
+            <TextField
+              id="standard-basic"
+              label="Введите пробег автомобиля"
+              variant="standard"
+              fullWidth
+              sx={{ mt: 1 }}
+              onChange={(e) => {
+                setCreateVehicle({
+                  ...createVehicle,
+                  mileage: e.target.value,
+                });
+              }}
+            />
+
+            <TextField
+              id="standard-basic"
+              label="Введите количество литров"
+              variant="standard"
+              fullWidth
+              sx={{ mt: 1 }}
+              onChange={(e) => {
+                setCreateVehicle({
+                  ...createVehicle,
+                  liters: e.target.value,
+                });
+              }}
+            />
 
             <Button
               variant="contained"

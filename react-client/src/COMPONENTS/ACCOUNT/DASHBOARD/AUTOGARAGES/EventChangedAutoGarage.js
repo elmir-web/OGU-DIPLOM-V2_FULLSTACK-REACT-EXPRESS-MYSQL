@@ -1,21 +1,60 @@
 import Cookies from "js-cookie";
 import Toast from "./../../../../Toast";
 
+import CONFIG from "./../../../../CONFIG.json";
+
 async function eventChangedAutoGarage(
-  funcRequest,
   loadAutoGarages,
   inputObjectAutoGarage,
   setChangedAutoGarage,
   setInputObjectAutoGarage
 ) {
+  if (
+    !("Name" in inputObjectAutoGarage) ||
+    inputObjectAutoGarage.Name.length < 3 ||
+    inputObjectAutoGarage.Name.length > 50
+  ) {
+    new Toast({
+      title: "Ошибка при изменении гаража",
+      text: `Поле ввода названия не должно быть пустым и в нем должнобыть от 3 до 50 символов (включительно)`,
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
+    return;
+  }
+
+  if (
+    !("IDbase" in inputObjectAutoGarage) ||
+    inputObjectAutoGarage.IDbase === null ||
+    inputObjectAutoGarage.IDbase === -1
+  ) {
+    new Toast({
+      title: "Ошибка при изменении гаража",
+      text: `Автобаза не выбрана`,
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
+    return;
+  }
+
   let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
-  const response = await funcRequest(
-    `/api/autogarage/change`,
-    `PUT`,
-    inputObjectAutoGarage,
-    tempUserAuthCookie
+  let responseFetch = await fetch(
+    `${CONFIG.URL_BACKEND}/api/autogarage/change`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${tempUserAuthCookie}`,
+      },
+      body: JSON.stringify(inputObjectAutoGarage),
+    }
   );
+
+  const { ok, status } = responseFetch;
+  responseFetch = await responseFetch.json();
 
   setChangedAutoGarage(null);
   setInputObjectAutoGarage({
@@ -24,10 +63,10 @@ async function eventChangedAutoGarage(
     IDbase: null,
   });
 
-  if (response.ok === false && response.status === 400) {
+  if (ok === false && status === 400) {
     new Toast({
       title: "Ошибка при изменении гаража",
-      text: response.responseFetch,
+      text: responseFetch,
       theme: "danger",
       autohide: true,
       interval: 10000,
@@ -37,7 +76,7 @@ async function eventChangedAutoGarage(
 
   new Toast({
     title: "Вас ждет успех!",
-    text: response.responseFetch,
+    text: responseFetch,
     theme: "success",
     autohide: true,
     interval: 10000,

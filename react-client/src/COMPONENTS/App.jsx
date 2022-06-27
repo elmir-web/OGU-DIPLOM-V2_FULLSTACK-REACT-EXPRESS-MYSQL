@@ -11,6 +11,8 @@ import Dashboard from "./ACCOUNT/DASHBOARD/Dashboard";
 
 import CONFIG from "./../CONFIG.json";
 
+window.isValidDouble = (v) => Number.isFinite(+v) && +v % 1 !== 0;
+
 async function funcRequest(url, method = "GET", data = null, token = null) {
   try {
     let headers = {};

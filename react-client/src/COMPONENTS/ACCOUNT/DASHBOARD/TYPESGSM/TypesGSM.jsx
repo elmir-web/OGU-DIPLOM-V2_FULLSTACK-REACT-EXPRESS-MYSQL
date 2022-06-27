@@ -5,12 +5,16 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import Cookies from "js-cookie";
 
+import CONFIG from "./../../../../CONFIG.json";
+
+import "./TypesGSM.scss";
+
 import deleteTypeGSM from "./DeleteTypeGSM";
 import beginUpdateGSM from "./BeginUpdateGSM";
 import eventChangedTypeGSM from "./EventChangedTypeGSM";
 import eventCreatedTypeGSM from "./EventCreatedTypeGSM";
 
-const TypesGSM = ({ funcRequest }) => {
+const TypesGSM = ({}) => {
   let [allTypesGSM, setTypesGSM] = useState([]);
   let [statusAccessEditing, setStatusAccessEditing] = useState(false);
   let [changedGSM, setChangedGSM] = useState(null);
@@ -27,18 +31,27 @@ const TypesGSM = ({ funcRequest }) => {
   async function loadTypesGSM() {
     let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
-    const tempGetAccess = await funcRequest(
-      "/api/type-gsm/access",
-      "GET",
-      null,
-      tempUserAuthCookie
+    let responseFetch = await fetch(
+      `${CONFIG.URL_BACKEND}/api/type-gsm/access`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${tempUserAuthCookie}`,
+        },
+      }
     );
 
-    setStatusAccessEditing(tempGetAccess.responseFetch.access);
+    responseFetch = await responseFetch.json();
 
-    const gsm = await funcRequest("/api/type-gsm/get", "GET", null, null);
+    setStatusAccessEditing(responseFetch.access);
 
-    setTypesGSM(gsm.responseFetch);
+    let gsm = await fetch(`${CONFIG.URL_BACKEND}/api/type-gsm/get`, {
+      method: "GET",
+    });
+
+    gsm = await gsm.json();
+
+    setTypesGSM(gsm);
   }
 
   return (
@@ -61,7 +74,7 @@ const TypesGSM = ({ funcRequest }) => {
                     <td>{itemGsm.ID}</td>
                     <td>{itemGsm.Name}</td>
                     <td>{itemGsm.ForKilo}</td>
-                    <td>
+                    <td className="table-buttons">
                       <Button
                         variant="outlined"
                         color="error"
@@ -69,7 +82,6 @@ const TypesGSM = ({ funcRequest }) => {
                         onClick={() => {
                           deleteTypeGSM(
                             itemGsm,
-                            funcRequest,
                             loadTypesGSM,
                             statusAccessEditing
                           );
@@ -153,7 +165,6 @@ const TypesGSM = ({ funcRequest }) => {
                   fullWidth
                   onClick={() =>
                     eventChangedTypeGSM(
-                      funcRequest,
                       loadTypesGSM,
                       setChangedGSM,
                       setInputObjectGSM,
@@ -216,7 +227,6 @@ const TypesGSM = ({ funcRequest }) => {
               fullWidth
               onClick={() =>
                 eventCreatedTypeGSM(
-                  funcRequest,
                   createObjectGSM,
                   setCreateObjectGSM,
                   loadTypesGSM
