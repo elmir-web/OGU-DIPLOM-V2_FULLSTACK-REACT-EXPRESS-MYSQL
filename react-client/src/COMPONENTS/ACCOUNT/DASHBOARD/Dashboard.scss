@@ -10,6 +10,11 @@
     &__nav {
       overflow-x: auto;
       scrollbar-width: none;
+      background-color: #fff;
+      padding-top: 15px;
+      padding-bottom: 10px;
+      padding-left: 20px;
+      border-radius: 10px;
 
       &::-webkit-scrollbar {
         height: 0;
@@ -25,14 +30,22 @@
           width: fit-content;
           flex-grow: 0;
           flex-shrink: 0;
-          margin-left: 50px;
+          margin-right: 50px;
+          border-bottom: 1px solid RGB(12, 108, 182);
+          padding-left: 15px;
+          padding-right: 15px;
+          padding-bottom: 5px;
+
+          &:hover {
+            background-color: RGB(12, 108, 182);
+          }
 
           @media (max-width: 767px) {
-            margin-left: 20px;
+            margin-right: 20px;
           }
 
           &:first-child {
-            margin-left: 0;
+            // margin-right: 0;
           }
 
           a {
@@ -40,6 +53,12 @@
             width: fit-content;
             display: inline-block;
             font-size: 20px;
+            color: RGB(12, 108, 182);
+
+            &:hover {
+              background-color: RGB(12, 108, 182);
+              color: white;
+            }
 
             @media (max-width: 767px) {
               font-size: 14px;
@@ -50,6 +69,7 @@
     }
 
     &__exit {
+      margin-left: 20px;
       font-size: 20px;
       padding-left: 20px;
       padding-right: 20px;
