@@ -20,11 +20,7 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 const theme = createTheme();
 
-export default function Login({
-  funcRequest,
-  workerAccount,
-  setWorkerAccount,
-}) {
+export default function Login({ workerAccount, setWorkerAccount }) {
   const [buttonLoginUsingStatus, setButtonLoginUsingStatus] = useState(false);
 
   let navigate = useNavigate();
@@ -36,36 +32,13 @@ export default function Login({
     if (tempUserAuthCookie !== undefined && workerAccount === false) {
       setButtonLoginUsingStatus(true);
 
-      let reqAccountWorker = await funcRequest(
-        `/account/profile`,
-        "GET",
-        null,
-        tempUserAuthCookie
-      );
-
-      if (!reqAccountWorker.ok && reqAccountWorker.status === 400) {
-        new Toast({
-          title: "Ошибка при авторизации аккаунта",
-          text: "Ошибка при считывании аккаунта, обновите страницу!",
-          theme: "danger",
-          autohide: true,
-          interval: 10000,
-        });
-        return;
-      }
-
-      reqAccountWorker = reqAccountWorker.responseFetch;
-
-      setWorkerAccount(reqAccountWorker);
-
       new Toast({
         title: "Ошибка",
-        text: `Вы уже авторизированы под аккаунт ${reqAccountWorker.loginUser}. Подождите 5 секунд, вас перенаправит на профиль!`,
+        text: `Вы уже авторизированы под аккаунт. Подождите 5 секунд, вас перенаправит на профиль!`,
         theme: "danger",
         autohide: true,
         interval: 10000,
       });
-
       setTimeout(() => navigate("/account/dashboard"), 5000);
     }
   }, []);
@@ -90,7 +63,6 @@ export default function Login({
             onSubmit={(event) =>
               authorizeAccount(
                 event,
-                funcRequest,
                 setButtonLoginUsingStatus,
                 setWorkerAccount,
                 navigate

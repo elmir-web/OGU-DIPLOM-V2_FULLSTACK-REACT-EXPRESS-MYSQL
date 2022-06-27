@@ -11,7 +11,7 @@ import changeAccessDataEvent from "./EventChangeAccessData";
 
 import Avatar from "./AVATAR/Avatar";
 
-const Profile = ({ workerAccount, funcRequest, setWorkerAccount }) => {
+const Profile = ({ workerAccount, setWorkerAccount }) => {
   const [changedFIO, setChangedFIO] = useState(false);
   const [dataFIO, setDataFIO] = useState(null);
   const [changedAccessData, setChangedAccessData] = useState(false);
@@ -20,7 +20,8 @@ const Profile = ({ workerAccount, funcRequest, setWorkerAccount }) => {
   return (
     <div className="Profile">
       <div className="profile-wrapper">
-        <Avatar FunctionID={workerAccount?.Function?.ID} />
+        <Avatar FunctionID={workerAccount?.Function?.ID} width="350" />
+
         <div className="content-main">
           <h2>
             {workerAccount?.Function?.Role} {workerAccount?.FIO}
@@ -30,7 +31,7 @@ const Profile = ({ workerAccount, funcRequest, setWorkerAccount }) => {
           <p>Логин: {workerAccount?.loginUser}</p>
         </div>
       </div>
-      <hr />
+
       <div className="settings-wrapper">
         {!changedFIO ? (
           <Button
@@ -82,7 +83,6 @@ const Profile = ({ workerAccount, funcRequest, setWorkerAccount }) => {
               sx={{ mt: 1, mb: 1 }}
               onClick={() =>
                 changeFIOEvent(
-                  funcRequest,
                   dataFIO,
                   setWorkerAccount,
                   workerAccount,
@@ -101,6 +101,7 @@ const Profile = ({ workerAccount, funcRequest, setWorkerAccount }) => {
             </Button>
           </div>
         )}
+
         {!changedAccessData ? (
           <Button
             variant="outlined"
@@ -147,7 +148,6 @@ const Profile = ({ workerAccount, funcRequest, setWorkerAccount }) => {
               sx={{ mt: 1, mb: 1 }}
               onClick={() =>
                 changeAccessDataEvent(
-                  funcRequest,
                   dataAccess,
                   setWorkerAccount,
                   workerAccount,

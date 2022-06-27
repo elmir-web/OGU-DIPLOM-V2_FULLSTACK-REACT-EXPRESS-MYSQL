@@ -18,14 +18,9 @@ import createAccount from "./CreateAccount";
 
 const theme = createTheme();
 
-export default function Register({
-  funcRequest,
-  workerAccount,
-  setWorkerAccount,
-}) {
+export default function Register({ workerAccount }) {
   const [buttonRegisterUsingStatus, setButtonRegisterUsingStatus] =
     useState(false);
-
   let navigate = useNavigate();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -35,36 +30,13 @@ export default function Register({
     if (tempUserAuthCookie !== undefined && workerAccount === false) {
       setButtonRegisterUsingStatus(true);
 
-      let reqAccountWorker = await funcRequest(
-        `/account/profile`,
-        "GET",
-        null,
-        tempUserAuthCookie
-      );
-
-      if (!reqAccountWorker.ok && reqAccountWorker.status === 400) {
-        new Toast({
-          title: "Ошибка при авторизации аккаунта",
-          text: "Ошибка при считывании аккаунта, обновите страницу!",
-          theme: "danger",
-          autohide: true,
-          interval: 10000,
-        });
-        return;
-      }
-
-      reqAccountWorker = reqAccountWorker.responseFetch;
-
-      setWorkerAccount(reqAccountWorker);
-
       new Toast({
         title: "Ошибка",
-        text: `Вы уже авторизированы под аккаунт ${reqAccountWorker.loginUser}. Подождите 5 секунд, вас перенаправит на профиль!`,
+        text: `Вы уже авторизированы под аккаунт. Подождите 5 секунд, вас перенаправит на профиль!`,
         theme: "danger",
         autohide: true,
         interval: 10000,
       });
-
       setTimeout(() => navigate("/account/dashboard"), 5000);
     }
   }, []);
@@ -88,12 +60,7 @@ export default function Register({
             component="form"
             noValidate
             onSubmit={(event) =>
-              createAccount(
-                event,
-                funcRequest,
-                setButtonRegisterUsingStatus,
-                navigate
-              )
+              createAccount(event, setButtonRegisterUsingStatus, navigate)
             }
             sx={{ mt: 3 }}
           >
@@ -145,6 +112,7 @@ export default function Register({
                 />
               </Grid>
             </Grid>
+
             {buttonRegisterUsingStatus === false ? (
               <Button
                 type="submit"
@@ -167,12 +135,14 @@ export default function Register({
                 Создать аккаунт
               </LoadingButton>
             )}
+
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2" component={RouterLink} to="/">
                   На главную
                 </Link>
               </Grid>
+
               <Grid item>
                 <Link
                   component={RouterLink}

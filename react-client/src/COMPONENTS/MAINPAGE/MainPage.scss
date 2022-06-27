@@ -1,0 +1,202 @@
+.MainPage {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+
+  .header {
+    background-color: RGB(12, 108, 182);
+
+    .central-container {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    &__logo {
+      width: 236px;
+      height: 73px;
+      background: transparent
+        url(http://www.osu.ru/img/skins/55years/head-logo.jpg) 0 0 no-repeat;
+
+      &:hover {
+        cursor: pointer;
+      }
+
+      @media (max-width: 909px) {
+        display: none;
+      }
+    }
+
+    &__center {
+      display: flex;
+      align-items: center;
+      width: fit-content;
+      color: white;
+
+      @media (max-width: 909px) {
+        height: 73px;
+      }
+      @media (min-width: 910px) {
+        font-size: 14px;
+      }
+      @media (min-width: 1000px) {
+        font-size: 18px;
+      }
+      @media (min-width: 1100px) {
+        font-size: 20px;
+      }
+      @media (min-width: 1200px) {
+        font-size: 28px;
+      }
+
+      @media (min-width: 768px) {
+        .header__mobile-title {
+          display: none;
+        }
+        .header__desktop-title {
+          display: block;
+        }
+      }
+
+      @media (max-width: 767px) {
+        .header__mobile-title {
+          display: block;
+        }
+        .header__desktop-title {
+          display: none;
+        }
+      }
+    }
+
+    &__right {
+      display: flex;
+      align-items: center;
+
+      .header-dashboard {
+        text-decoration: none;
+        font-size: 16px;
+        color: white;
+        border-bottom: 1px solid white;
+        padding-bottom: 1px;
+        padding-left: 5px;
+        padding-right: 5px;
+        text-transform: uppercase;
+
+        &:hover {
+          color: yellow;
+          border-bottom: 1px solid yellow;
+        }
+      }
+    }
+  }
+
+  .main {
+    flex: 1 1 auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    .central-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+
+    &__title {
+      width: 60%;
+      font-size: 36px;
+      text-transform: uppercase;
+
+      @media (max-width: 768px) {
+        font-size: 24px;
+      }
+    }
+
+    &__description {
+      margin-top: 50px;
+      width: 60%;
+      font-size: 20px;
+      text-transform: uppercase;
+
+      @media (max-width: 768px) {
+        margin-top: 20px;
+      }
+    }
+
+    &__account-controlls {
+      margin-top: 40px;
+      display: flex;
+      justify-content: space-between;
+      width: 50%;
+
+      @media (max-width: 920px) {
+        flex-direction: column;
+        margin-top: 15px;
+      }
+
+      .button-register {
+        background-color: #1976d3;
+        color: white;
+
+        &:hover {
+          background-color: white;
+          color: #1976d3;
+          border: 1px solid #1976d3;
+        }
+      }
+
+      .button-authorize {
+        background-color: white;
+        color: #1976d3;
+        border: 1px solid #1976d3;
+
+        &:hover {
+          background-color: #1976d3;
+          color: white;
+        }
+
+        @media (max-width: 920px) {
+          margin-top: 15px;
+        }
+      }
+    }
+
+    &__account-button {
+      text-decoration: none;
+      padding: 15px;
+      display: block;
+      border-radius: 10px;
+      font-size: 20px;
+      text-transform: uppercase;
+
+      @media (max-width: 920px) {
+        text-align: center;
+        font-size: 14px;
+      }
+    }
+  }
+
+  .footer {
+    background-color: RGB(12, 108, 182);
+    padding-top: 20px;
+    padding-bottom: 20px;
+    div {
+      text-align: center;
+      color: white;
+
+      a {
+        color: white;
+        text-decoration: none;
+        border-bottom: 1px solid white;
+        display: inline-block;
+        padding-left: 5px;
+        padding-right: 5px;
+
+        &:hover {
+          color: yellow;
+          border-bottom: 1px solid yellow;
+        }
+      }
+    }
+  }
+}

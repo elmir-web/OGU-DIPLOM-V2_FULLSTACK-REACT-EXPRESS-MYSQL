@@ -7,16 +7,52 @@ import imgDriver from "./../../../../../IMAGES/2.Водитель.jpg";
 import imgPodpisant from "./../../../../../IMAGES/3.Подписант.jpg";
 import imgAdmin from "./../../../../../IMAGES/4.Админ.jpg";
 
-const Avatar = ({ FunctionID }) => {
+const Avatar = ({ FunctionID, width }) => {
   switch (FunctionID) {
     case 0:
-      return <img className="Avatar" src={imgKandidat} />;
+      return (
+        // eslint-disable-next-line jsx-a11y/alt-text
+        <img
+          className="Avatar"
+          src={imgKandidat}
+          style={{
+            width: `${width}px`,
+          }}
+        />
+      );
     case 1:
-      return <img className="Avatar" src={imgDriver} />;
+      return (
+        // eslint-disable-next-line jsx-a11y/alt-text
+        <img
+          className="Avatar"
+          src={imgDriver}
+          style={{
+            width: `${width}px`,
+          }}
+        />
+      );
     case 2:
-      return <img className="Avatar" src={imgPodpisant} />;
+      return (
+        // eslint-disable-next-line jsx-a11y/alt-text
+        <img
+          className="Avatar"
+          src={imgPodpisant}
+          style={{
+            width: `${width}px`,
+          }}
+        />
+      );
     case 3:
-      return <img className="Avatar" src={imgAdmin} />;
+      return (
+        // eslint-disable-next-line jsx-a11y/alt-text
+        <img
+          className="Avatar"
+          src={imgAdmin}
+          style={{
+            width: `${width}px`,
+          }}
+        />
+      );
     default:
       return <div>stop</div>;
   }

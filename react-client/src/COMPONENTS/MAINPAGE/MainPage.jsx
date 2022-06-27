@@ -1,126 +1,101 @@
-import React from "react";
-import AppBar from "@mui/material/AppBar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import Grid from "@mui/material/Grid";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import Link from "@mui/material/Link";
+import React, { useEffect } from "react";
+import Toast from "./../../Toast";
+
+import "./MainPage.scss";
 
 import { Link as RouterLink } from "react-router-dom";
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"© "}
-      <Link
-        color="inherit"
-        href="https://github.com/elmir-web/"
-        target="_blank"
-      >
-        Студент заочник З-18ПИнж(ба)РПиС - Кубагушев Эльмир Ирекович
-      </Link>{" "}
-      Проект по расширению курсовой работы по предмету "СуБД" до соответствия
-      диплома 2020 - {new Date().getFullYear()} гг
-      {"."}
-    </Typography>
-  );
-}
+export default function MainPage({ error }) {
+  useEffect(() => {
+    if (error !== undefined || error?.status === true) {
+      new Toast({
+        title: "Ошибка",
+        text: `Такого URL адреса не предусмотрено! Вы были переадресованы на главную страницу!`,
+        theme: "danger",
+        autohide: true,
+        interval: 10000,
+      });
+    }
+  }, []);
 
-export default function MainPage() {
   return (
     <React.Fragment>
-      <CssBaseline />
-      <AppBar position="relative">
-        <Toolbar>
-          <Typography variant="h6" color="inherit" noWrap>
-            Автомобильная компания "ОГУ" |{" "}
-            <Button
-              component={RouterLink}
-              variant="body2"
-              color="primary"
-              to="/account/dashboard"
-            >
-              Личный кабинет
-            </Button>
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <br />
-      <br />
-      <br />
-      <main>
-        <div>
-          <Container maxWidth="sm">
-            <Typography
-              component="h1"
-              variant="h2"
-              align="center"
-              color="textPrimary"
-              gutterBottom
-            >
-              Автомобильная компания "ОГУ"*
-            </Typography>
+      <div className="MainPage">
+        <header className="header">
+          <div className="central-container">
+            <div
+              className="header__logo"
+              onClick={() => {
+                window.open("http://osu.ru/", "_blank");
+              }}
+            ></div>
 
-            <Typography
-              variant="h5"
-              align="center"
-              color="textSecondary"
-              paragraph
-            >
+            <div className="header__center">
+              <span className="header__desktop-title">
+                Проект Оренбургского Государственного Университета
+              </span>
+              <span className="header__mobile-title">Проект ОГУ</span>
+            </div>
+
+            <div className="header__right">
+              <RouterLink to="/account/dashboard" className="header-dashboard">
+                Личный кабинет
+              </RouterLink>
+            </div>
+          </div>
+        </header>
+
+        <main className="main">
+          <div className="central-container">
+            <div className="main__title">
+              Панель управления планирования топлива на автомобильных базах
+            </div>
+
+            <div className="main__description">
               Добро пожаловать в панель управления автомобильной компании
               "ОГУ"*. Выберите ниже, что вам требуется сделать. При регистрации
               вы попадете в базу данных как "Кандидат" и с вами свяжется отдел
               кадров. При авторизации вы войдете в свой личный кабинет.
-            </Typography>
-          </Container>
-        </div>
-        <div>
-          <Grid container spacing={2} justifyContent="center">
-            <Grid item>
-              <Button
-                component={RouterLink}
-                variant="contained"
-                color="primary"
+            </div>
+
+            <div className="main__account-controlls">
+              <RouterLink
                 to="/account/register"
+                className="main__account-button button-register"
               >
                 Стать кандидатом
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                variant="outlined"
-                color="primary"
-                component={RouterLink}
+              </RouterLink>
+
+              <RouterLink
                 to="/account/login"
+                className="main__account-button button-authorize"
               >
                 Авторизация
-              </Button>
-            </Grid>
-          </Grid>
-        </div>
-      </main>
-      <br />
-      <br />
-      <br />
-      <footer>
-        <Typography
-          variant="subtitle1"
-          align="center"
-          color="textSecondary"
-          component="p"
-          style={{
-            fontSize: "10px",
-          }}
-        >
-          * - Компания "ОГУ" виртуальна, все совпадения с реальной жизнью лишь
-          совпадения и не имеют ничего общего с реальностью. В программе
-          используются только учебные данные. Данные настоящих граждан РФ не
-          используются или являются лишь вымышленным совпадением.
-        </Typography>{" "}
-        <Copyright />
-      </footer>
+              </RouterLink>
+            </div>
+          </div>
+        </main>
+        <footer className="footer">
+          <div className="central-container">
+            <div>
+              Началом работы считается третий курс. Предмет Дмитрия
+              Владимировича Горбачёва - "БД и СуБД".
+            </div>
+
+            <div>
+              Проект разрабатывается согласно моему решению о расширении до темы
+              диплома. Разработчик - студент З-18ПИнж(ба)РПиС -{" "}
+              <a href="http://elmir-web.github.io" target="_blank">
+                Кубагушев Эльмир
+              </a>
+              .
+            </div>
+            <div>
+              Тема диплома: "Прогнозирование стратегического запаса топлива".
+            </div>
+          </div>
+        </footer>
+      </div>
     </React.Fragment>
   );
 }

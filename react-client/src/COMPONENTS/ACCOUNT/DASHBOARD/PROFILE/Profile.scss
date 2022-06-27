@@ -1,7 +1,33 @@
 .Profile {
+  width: 100%;
+
   .profile-wrapper {
     display: flex;
-    justify-content: space-between;
-    color: #896e69;
+    column-gap: 50px;
+
+    @media (max-width: 700px) {
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .profile-avatar {
+      width: 100px;
+    }
+
+    .content-main {
+      width: 100%;
+
+      @media (max-width: 700px) {
+        margin-top: 25px;
+      }
+    }
+  }
+
+  .settings-wrapper {
+    margin-top: 25px;
+  }
+
+  .access-form {
+    margin-top: 25px;
   }
 }

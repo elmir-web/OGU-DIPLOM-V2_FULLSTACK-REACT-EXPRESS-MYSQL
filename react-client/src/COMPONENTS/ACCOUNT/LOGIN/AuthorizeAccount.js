@@ -1,9 +1,10 @@
 import Toast from "./../../../Toast";
 import Cookies from "js-cookie";
 
+import CONFIG from "./../../../CONFIG.json";
+
 const authorizeAccount = async (
   event,
-  funcRequest,
   setButtonLoginUsingStatus,
   setWorkerAccount,
   navigate
@@ -17,11 +18,7 @@ const authorizeAccount = async (
     passwordUser: data.get("passwordUser"),
   };
 
-  if (
-    !authAccount.loginUser.length ||
-    authAccount.loginUser.length < 2 ||
-    authAccount.loginUser.length > 20
-  ) {
+  if (authAccount.loginUser.length < 2 || authAccount.loginUser.length > 20) {
     new Toast({
       title: "Ошибка",
       text: "Логин не должен быть пустой строкой, либо меньше двух или больше двадцати символов",
@@ -33,7 +30,6 @@ const authorizeAccount = async (
   }
 
   if (
-    !authAccount.passwordUser.length ||
     authAccount.passwordUser.length < 2 ||
     authAccount.passwordUser.length > 30
   ) {
@@ -55,17 +51,19 @@ const authorizeAccount = async (
     interval: 3000,
   });
 
-  const request = await funcRequest(
-    `/account/login`,
-    "POST",
-    authAccount,
-    null
-  );
+  let responseFetch = await fetch(`${CONFIG.URL_BACKEND}/account/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(authAccount),
+  });
 
-  if (!request.ok && request.status === 400) {
+  const { ok, status } = responseFetch;
+  responseFetch = await responseFetch.json();
+
+  if (!ok && status === 400) {
     new Toast({
       title: "Ошибка при авторизации аккаунта",
-      text: request.responseFetch,
+      text: responseFetch,
       theme: "danger",
       autohide: true,
       interval: 5000,
@@ -75,7 +73,7 @@ const authorizeAccount = async (
 
   new Toast({
     title: "Вас ждет успех!",
-    text: request.responseFetch.message,
+    text: responseFetch.message,
     theme: "success",
     autohide: true,
     interval: 8000,
@@ -89,9 +87,9 @@ const authorizeAccount = async (
     interval: 10000,
   });
 
-  Cookies.set("OGU_DIPLOM_COOKIE_AUTHTOKEN", request.responseFetch.token);
+  Cookies.set("OGU_DIPLOM_COOKIE_AUTHTOKEN", responseFetch.token);
 
-  setWorkerAccount(request.responseFetch.acc);
+  setWorkerAccount(responseFetch.acc);
 
   setButtonLoginUsingStatus(true);
 
