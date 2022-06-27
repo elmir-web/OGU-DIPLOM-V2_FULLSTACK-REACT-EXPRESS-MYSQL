@@ -160,7 +160,7 @@ const Dashboard = ({ funcRequest, workerAccount, setWorkerAccount }) => {
             <Route path="autobase" element={<AutoBase />} />
             <Route path="types-gsm" element={<TypesGSM />} />
             <Route path="autogarages" element={<AutoGarages />} />
-            <Route path="autos" element={<Autos funcRequest={funcRequest} />} />
+            <Route path="autos" element={<Autos />} />
             <Route
               path="workers"
               element={

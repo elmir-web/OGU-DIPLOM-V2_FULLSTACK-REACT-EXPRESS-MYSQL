@@ -55,16 +55,17 @@ class VehicleController {
   }
 
   async updateVehicle(req, res) {
-    const { ID, Model, Number, IDgarage } = req.body;
+    const { ID, Model, Number, IDgarage, mileage } = req.body;
 
     const [rowsUpdatedVeh] = await global.connectMySQL.execute(
-      `UPDATE car SET Model = '${Model}', Number = '${Number}', IDgarage = '${IDgarage}' WHERE ID = ${ID}`
+      `UPDATE car SET Model = '${Model}', Number = '${Number}', IDgarage = '${IDgarage}', mileage = '${mileage}' WHERE ID = ${ID}`
     );
+
     if (rowsUpdatedVeh["affectedRows"])
       res
         .status(200)
         .json(
-          `Автомобиль (ID: "${ID}", Модель: "${Model}", гос.номер: "${Number}", ID гаража: "${IDgarage}") изменен`
+          `Автомобиль (ID: "${ID}", Модель: "${Model}", гос.номер: "${Number}", ID гаража: "${IDgarage}", Пробег: "${mileage}") изменен`
         );
     else res.status(400).json(`Автомобиль с ID: ${ID} не изменен`);
   }

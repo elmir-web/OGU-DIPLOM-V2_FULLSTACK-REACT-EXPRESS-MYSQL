@@ -1,12 +1,9 @@
 import Toast from "./../../../../Toast";
 import Cookies from "js-cookie";
 
-async function deleteVehicle(
-  veh = null,
-  funcRequest,
-  loadVehicles,
-  statusAccessEditing
-) {
+import CONFIG from "./../../../../CONFIG.json";
+
+async function deleteVehicle(veh = null, loadVehicles, statusAccessEditing) {
   if (!statusAccessEditing) {
     new Toast({
       title: "Ошибка при удалении автомобиля",
@@ -20,17 +17,23 @@ async function deleteVehicle(
 
   let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
-  const response = await funcRequest(
-    `/api/vehicle/delete/${veh.ID}`,
-    "DELETE",
-    null,
-    tempUserAuthCookie
+  let responseFetch = await fetch(
+    `${CONFIG.URL_BACKEND}/api/vehicle/delete/${veh.ID}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${tempUserAuthCookie}`,
+      },
+    }
   );
 
-  if (response.ok === false && response.status === 400) {
+  const { ok, status } = responseFetch;
+  responseFetch = await responseFetch.json();
+
+  if (ok === false && status === 400) {
     new Toast({
       title: "Ошибка при удалении автомобиля",
-      text: response.responseFetch,
+      text: responseFetch,
       theme: "danger",
       autohide: true,
       interval: 10000,
@@ -40,7 +43,7 @@ async function deleteVehicle(
 
   new Toast({
     title: "Вас ждет успех!",
-    text: response.responseFetch,
+    text: responseFetch,
     theme: "success",
     autohide: true,
     interval: 10000,

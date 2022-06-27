@@ -10,6 +10,8 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Toast from "./../../../../Toast";
 
+import CONFIG from "./../../../../CONFIG.json";
+
 import "./Autos.scss";
 
 import deleteVehicle from "./DeleteAuto";
@@ -17,7 +19,7 @@ import beginUpdateVeh from "./BeginUpdateAuto";
 import eventChangedAuto from "./EventChangedAuto";
 import eventCreatedAuto from "./EventCreatedAuto";
 
-const Autos = ({ funcRequest }) => {
+const Autos = ({}) => {
   let [statusAccessEditing, setStatusAccessEditing] = useState(false);
   let [allVehicles, setVehicles] = useState([]);
   let [allTypesGSM, setTypesGSM] = useState([]);
@@ -37,28 +39,45 @@ const Autos = ({ funcRequest }) => {
   async function loadVehicles() {
     let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
-    const tempGetAccess = await funcRequest(
-      "/api/vehicle/access",
-      "GET",
-      null,
-      tempUserAuthCookie
+    let tempGetAccess = await fetch(
+      `${CONFIG.URL_BACKEND}/api/vehicle/access`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${tempUserAuthCookie}`,
+        },
+      }
     );
 
-    setStatusAccessEditing(tempGetAccess.responseFetch.access);
+    tempGetAccess = await tempGetAccess.json();
 
-    const vehicles = await funcRequest(`/api/vehicles/get`, "GET", null, null);
+    setStatusAccessEditing(tempGetAccess.access);
 
-    setVehicles(vehicles.responseFetch);
+    let vehicles = await fetch(`${CONFIG.URL_BACKEND}/api/vehicles/get`, {
+      method: "GET",
+    });
 
-    console.log(vehicles.responseFetch);
+    vehicles = await vehicles.json();
 
-    const typesGSM = await funcRequest(`/api/type-gsm/get`);
+    setVehicles(vehicles);
 
-    setTypesGSM(typesGSM.responseFetch);
+    console.log(vehicles);
 
-    const autoGarages = await funcRequest(`/api/autogarage/get`);
+    let typesGSM = await fetch(`${CONFIG.URL_BACKEND}/api/type-gsm/get`, {
+      method: "GET",
+    });
 
-    setAutoGarages(autoGarages.responseFetch);
+    typesGSM = await typesGSM.json();
+
+    setTypesGSM(typesGSM);
+
+    let autoGarages = await fetch(`${CONFIG.URL_BACKEND}/api/autogarage/get`, {
+      method: "GET",
+    });
+
+    autoGarages = await autoGarages.json();
+
+    setAutoGarages(autoGarages);
   }
 
   return (
@@ -101,12 +120,7 @@ const Autos = ({ funcRequest }) => {
                         color="error"
                         size="small"
                         onClick={() => {
-                          deleteVehicle(
-                            veh,
-                            funcRequest,
-                            loadVehicles,
-                            statusAccessEditing
-                          );
+                          deleteVehicle(veh, loadVehicles, statusAccessEditing);
                         }}
                       >
                         <DeleteIcon fontSize="small" />
@@ -205,6 +219,14 @@ const Autos = ({ funcRequest }) => {
                           interval: 10000,
                         });
 
+                        let tempThisVeh = {
+                          ...inputObjectVehicle,
+                          ID: changedVehicle.ID,
+                          IDgarage: -1,
+                        };
+
+                        setInputObjectVehicle(tempThisVeh);
+
                         return;
                       }
 
@@ -228,6 +250,21 @@ const Autos = ({ funcRequest }) => {
                   </Select>
                 </FormControl>
 
+                <TextField
+                  id="standard-basic"
+                  label="Введите пробег автомобиля"
+                  variant="standard"
+                  fullWidth
+                  sx={{ mt: 1 }}
+                  onChange={(e) => {
+                    setInputObjectVehicle({
+                      ...inputObjectVehicle,
+                      ID: changedVehicle.ID,
+                      mileage: e.target.value,
+                    });
+                  }}
+                />
+
                 <Button
                   variant="contained"
                   color="success"
@@ -235,7 +272,6 @@ const Autos = ({ funcRequest }) => {
                   fullWidth
                   onClick={() => {
                     eventChangedAuto(
-                      funcRequest,
                       loadVehicles,
                       inputObjectVehicle,
                       setChangedVehicle,
@@ -370,6 +406,7 @@ const Autos = ({ funcRequest }) => {
                 })}
               </Select>
             </FormControl>
+
             <TextField
               id="standard-basic"
               label="Введите пробег автомобиля"
@@ -383,6 +420,7 @@ const Autos = ({ funcRequest }) => {
                 });
               }}
             />
+
             <TextField
               id="standard-basic"
               label="Введите количество литров"
@@ -417,12 +455,7 @@ const Autos = ({ funcRequest }) => {
               sx={{ mt: 1 }}
               fullWidth
               onClick={() =>
-                eventCreatedAuto(
-                  funcRequest,
-                  loadVehicles,
-                  createVehicle,
-                  setCreateVehicle
-                )
+                eventCreatedAuto(loadVehicles, createVehicle, setCreateVehicle)
               }
             >
               Создать

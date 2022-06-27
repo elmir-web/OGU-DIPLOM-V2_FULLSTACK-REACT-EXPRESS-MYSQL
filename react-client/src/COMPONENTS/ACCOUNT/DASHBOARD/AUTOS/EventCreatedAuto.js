@@ -3,12 +3,7 @@ import Toast from "./../../../../Toast";
 
 import CONFIG from "./../../../../CONFIG.json";
 
-async function eventCreatedAuto(
-  funcRequest,
-  loadVehicles,
-  createVehicle,
-  setCreateVehicle
-) {
+async function eventCreatedAuto(loadVehicles, createVehicle, setCreateVehicle) {
   if (!createVehicle) {
     new Toast({
       title: "Ошибка при создании транспорта",
@@ -123,6 +118,9 @@ async function eventCreatedAuto(
       autohide: true,
       interval: 10000,
     });
+
+    console.log(createVehicle.expense);
+
     return;
   }
 
