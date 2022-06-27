@@ -131,6 +131,9 @@
       padding: 9px 8px;
       transition: 0.3s linear;
 
+      white-space: nowrap;
+      overflow: hidden;
+
       .button-table {
         font-size: 12px;
         margin-right: 5px;

@@ -1,29 +1,46 @@
 import Cookies from "js-cookie";
 import Toast from "../../../../Toast";
 
+import CONFIG from "./../../../../CONFIG.json";
+
 async function eventCreatedAutoBase(
-  funcRequest,
   loadAutoBases,
   createNameAutoBase,
   setCreateNameAutoBase
 ) {
+  if (createNameAutoBase.length < 3 || createNameAutoBase.length > 50) {
+    new Toast({
+      title: "Ошибка при создании автомобильной базы",
+      text: "Название автомобильной базы от 3 до 50 символов (включительно)",
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
+    return;
+  }
+
   let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
-  const response = await funcRequest(
-    `/api/autobase/create`,
-    "POST",
-    {
-      Name: createNameAutoBase,
+  let responseFetch = await fetch(`${CONFIG.URL_BACKEND}/api/autobase/create`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${tempUserAuthCookie}`,
     },
-    tempUserAuthCookie
-  );
+    body: JSON.stringify({
+      Name: createNameAutoBase,
+    }),
+  });
+
+  const { ok, status } = responseFetch;
+  responseFetch = await responseFetch.json();
 
   setCreateNameAutoBase("");
 
-  if (response.ok === false && response.status === 400) {
+  if (ok === false && status === 400) {
     new Toast({
       title: "Ошибка при создании автомобильной базы",
-      text: response.responseFetch,
+      text: responseFetch,
       theme: "danger",
       autohide: true,
       interval: 10000,
@@ -33,7 +50,7 @@ async function eventCreatedAutoBase(
 
   new Toast({
     title: "Вас ждет успех!",
-    text: response.responseFetch,
+    text: responseFetch,
     theme: "success",
     autohide: true,
     interval: 10000,

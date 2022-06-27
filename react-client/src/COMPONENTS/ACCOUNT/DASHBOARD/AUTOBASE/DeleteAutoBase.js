@@ -1,10 +1,11 @@
 import Toast from "./../../../../Toast";
 import Cookies from "js-cookie";
 
+import CONFIG from "./../../../../CONFIG.json";
+
 async function deleteAutoBase(
   itemAutoBase,
   statusAccessEditing,
-  funcRequest,
   loadAutoBases
 ) {
   if (!statusAccessEditing) {
@@ -20,17 +21,25 @@ async function deleteAutoBase(
 
   let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
-  const response = await funcRequest(
-    `/api/autobase/delete/${itemAutoBase.ID}`,
-    "DELETE",
-    null,
-    tempUserAuthCookie
+  let responseFetch = await fetch(
+    `${CONFIG.URL_BACKEND}/api/autobase/delete/${itemAutoBase.ID}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${tempUserAuthCookie}`,
+      },
+    }
   );
 
-  if (response.ok === false && response.status === 400) {
+  const { ok, status } = responseFetch;
+  responseFetch = await responseFetch.json();
+
+  console.log(ok, status, responseFetch);
+
+  if (ok === false && status === 400) {
     new Toast({
       title: "Ошибка при удалении автомобильной базы",
-      text: response.responseFetch,
+      text: responseFetch,
       theme: "danger",
       autohide: true,
       interval: 10000,
@@ -40,7 +49,7 @@ async function deleteAutoBase(
 
   new Toast({
     title: "Вас ждет успех!",
-    text: response.responseFetch,
+    text: responseFetch,
     theme: "success",
     autohide: true,
     interval: 10000,

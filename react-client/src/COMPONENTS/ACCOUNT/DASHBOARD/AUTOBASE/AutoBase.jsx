@@ -5,6 +5,10 @@ import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 
+import CONFIG from "./../../../../CONFIG.json";
+
+import "./AutoBase.scss";
+
 import deleteAutoBase from "./DeleteAutoBase";
 import beginUpdateAutoBase from "./BeginUpdateAutoBase";
 import eventChangedAutoBase from "./EventChangedAutoBase";
@@ -23,18 +27,27 @@ const AutoBase = ({ funcRequest }) => {
   async function loadAutoBases() {
     let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
-    const tempGetAccess = await funcRequest(
-      "/api/autobase/access",
-      "GET",
-      null,
-      tempUserAuthCookie
+    let responseFetch = await fetch(
+      `${CONFIG.URL_BACKEND}/api/autobase/access`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${tempUserAuthCookie}`,
+        },
+      }
     );
 
-    setStatusAccessEditing(tempGetAccess.responseFetch.access);
+    responseFetch = await responseFetch.json();
 
-    const autoBases = await funcRequest("/api/autobase/get", "GET", null, null);
+    setStatusAccessEditing(responseFetch.access);
 
-    setAutoBases(autoBases.responseFetch);
+    let autoBases = await fetch(`${CONFIG.URL_BACKEND}/api/autobase/get`, {
+      method: "GET",
+    });
+
+    autoBases = await autoBases.json();
+
+    setAutoBases(autoBases);
     return;
   }
 
@@ -56,7 +69,7 @@ const AutoBase = ({ funcRequest }) => {
                   <tr key={itemAutoBase.ID}>
                     <td>{itemAutoBase.ID}</td>
                     <td>{itemAutoBase.Name}</td>
-                    <td>
+                    <td className="table-buttons">
                       <Button
                         variant="outlined"
                         color="error"
@@ -65,7 +78,6 @@ const AutoBase = ({ funcRequest }) => {
                           deleteAutoBase(
                             itemAutoBase,
                             statusAccessEditing,
-                            funcRequest,
                             loadAutoBases
                           );
                         }}
@@ -128,7 +140,6 @@ const AutoBase = ({ funcRequest }) => {
                   fullWidth
                   onClick={() => {
                     eventChangedAutoBase(
-                      funcRequest,
                       loadAutoBases,
                       changedAutoBase,
                       inputNameAutoBase,
@@ -170,7 +181,6 @@ const AutoBase = ({ funcRequest }) => {
               fullWidth
               onClick={async () => {
                 eventCreatedAutoBase(
-                  funcRequest,
                   loadAutoBases,
                   createNameAutoBase,
                   setCreateNameAutoBase

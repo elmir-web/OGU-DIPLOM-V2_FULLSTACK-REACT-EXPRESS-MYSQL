@@ -57,8 +57,6 @@ const Dashboard = ({ funcRequest, workerAccount, setWorkerAccount }) => {
 
       responseFetch = await responseFetch.json();
 
-      console.log(responseFetch.acc);
-
       if (!ok && status === 400) {
         new Toast({
           title: "Ошибка при авторизации аккаунта",
