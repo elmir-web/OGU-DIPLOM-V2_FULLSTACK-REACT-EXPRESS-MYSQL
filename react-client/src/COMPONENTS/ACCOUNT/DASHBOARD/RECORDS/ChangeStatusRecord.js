@@ -57,6 +57,25 @@ async function changeStatusRecord(
   const { ok, status } = responseFetch;
   responseFetch = await responseFetch.json();
 
+  if (ok === false && status === 400) {
+    new Toast({
+      title: "Ошибка при изменении путевого листа",
+      text: responseFetch,
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
+    return;
+  }
+
+  new Toast({
+    title: "Вас ждет успех!",
+    text: responseFetch,
+    theme: "success",
+    autohide: true,
+    interval: 10000,
+  });
+
   loadRecords();
 }
 

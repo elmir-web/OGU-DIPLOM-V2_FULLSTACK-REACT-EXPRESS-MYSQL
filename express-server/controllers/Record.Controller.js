@@ -85,16 +85,16 @@ class RecordController {
     } = req.body;
 
     const [rowsUpdatedRecord] = await global.connectMySQL.execute(
-      `UPDATE record SET IDsheet = '${IDsheet}', IDcar = '${IDcar}', IDdriver = '${IDdriver}', NumberPL = '${NumberPL}', IDgsm = '${IDgsm}', Liter = '${Liter}' WHERE ID = '${ID}'`
+      `UPDATE record SET IDgsm = '${IDgsm}', IDcar = '${IDcar}', IDsheet = '${IDsheet}', IDdriver = '${IDdriver}', NumberPL = '${NumberPL}', Liter = '${Liter}', openMileage = '${openMileage}', closeMileage = '${closeMileage}', recStatus = '${recStatus}' WHERE ID = '${ID}'`
     );
 
-    // if (rowsUpdatedRecord["affectedRows"])
-    res.status(200);
-    // .json(
-
-    // `Путевой лист (ID: ${ID} ID ведомости: "${IDsheet}", ID автомобиля: "${IDcar}", ID водителя: "${IDdriver}", Номер путевого листа: "${NumberPL}", ID ГСМ: "${IDgsm}", Литры: "${Liter}") изменен`
-    // );
-    // else res.status(400).json(`Путеовой лист с ID: ${ID} не изменен`);
+    if (rowsUpdatedRecord["affectedRows"])
+      res
+        .status(200)
+        .json(
+          `Путевой лист (ID: ${ID} ID ГСМ: "${IDgsm}", ID автомобиля: "${IDcar}", ID ведомости: "${IDsheet}", ID водителя: "${IDdriver}", Номер путевого листа: "${NumberPL}", Литры: "${Liter}", Пробег на момент открытия путевого листа: "${closeMileage}", Пробег на момент закрытия путевого листа: "${recStatus}", Статус путевого листа: "${recStatus}") изменен`
+        );
+    else res.status(400).json(`Путеовой лист с ID: ${ID} не изменен`);
   }
 
   async deleteRecord(req, res) {
