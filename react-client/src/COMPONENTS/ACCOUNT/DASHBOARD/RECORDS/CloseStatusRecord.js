@@ -3,7 +3,12 @@ import Toast from "./../../../../Toast";
 
 import CONFIG from "./../../../../CONFIG.json";
 
-async function closeStatusRecord(statusAccessEditing, record, workerAccount) {
+async function closeStatusRecord(
+  statusAccessEditing,
+  record,
+  workerAccount,
+  loadRecords
+) {
   if (!statusAccessEditing) {
     new Toast({
       title: "Ошибка при измении статуса путевого листа",
@@ -33,9 +38,21 @@ async function closeStatusRecord(statusAccessEditing, record, workerAccount) {
 
   record.recStatus = Number(!record.recStatus);
 
-  console.log(record);
-
   let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
+
+  let responseFetch = await fetch(`${CONFIG.URL_BACKEND}/api/record/change`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${tempUserAuthCookie}`,
+    },
+    body: JSON.stringify(record),
+  });
+
+  const { ok, status } = responseFetch;
+  responseFetch = await responseFetch.json();
+
+  loadRecords();
 }
 
 export default closeStatusRecord;

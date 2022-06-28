@@ -199,7 +199,8 @@ const Records = ({ workerAccount }) => {
                           closeStatusRecord(
                             statusAccessEditing,
                             record,
-                            workerAccount
+                            workerAccount,
+                            loadRecords
                           );
                         }}
                       >
