@@ -1,9 +1,9 @@
 import Cookies from "js-cookie";
-import Toast from "./../../../../Toast";
+import Toast from "../../../../Toast";
 
-import CONFIG from "./../../../../CONFIG.json";
+import CONFIG from "../../../../CONFIG.json";
 
-async function closeStatusRecord(
+async function changeStatusRecord(
   statusAccessEditing,
   record,
   workerAccount,
@@ -40,6 +40,11 @@ async function closeStatusRecord(
 
   let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
+  record.IDcar = record.IDcar.ID;
+  record.IDdriver = record.IDdriver.ID;
+  record.IDgsm = record.IDgsm.ID;
+  record.IDsheet = record.IDsheet.ID;
+
   let responseFetch = await fetch(`${CONFIG.URL_BACKEND}/api/record/change`, {
     method: "PUT",
     headers: {
@@ -55,4 +60,4 @@ async function closeStatusRecord(
   loadRecords();
 }
 
-export default closeStatusRecord;
+export default changeStatusRecord;

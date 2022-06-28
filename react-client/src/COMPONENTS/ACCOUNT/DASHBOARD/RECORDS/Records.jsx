@@ -17,7 +17,7 @@ import "./Records.scss";
 
 import deleteRecord from "./DeleteRecord";
 import beginUpdateRecord from "./BeginUpdateRecord";
-import closeStatusRecord from "./CloseStatusRecord";
+import changeStatusRecord from "./ChangeStatusRecord";
 import eventChangedRecord from "./EventChangedRecord";
 import eventCreatedRecord from "./EventCreatedRecord";
 
@@ -196,7 +196,7 @@ const Records = ({ workerAccount }) => {
                           ml: 2,
                         }}
                         onClick={() => {
-                          closeStatusRecord(
+                          changeStatusRecord(
                             statusAccessEditing,
                             record,
                             workerAccount,
