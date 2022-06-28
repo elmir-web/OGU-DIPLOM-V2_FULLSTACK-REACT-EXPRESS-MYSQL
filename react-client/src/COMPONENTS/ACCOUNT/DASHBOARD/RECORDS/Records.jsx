@@ -148,7 +148,9 @@ const Records = ({ workerAccount }) => {
                     <td>{record.Liter}</td>
                     <td>{record.openMileage}</td>
                     <td>
-                      {!record.closeMileage ? "Не закрыт" : record.closeMileage}
+                      {record.closeMileage === null
+                        ? "Не закрыт"
+                        : record.closeMileage}
                     </td>
                     <td>
                       {record.recStatus === 1 ? "Открыт (1)" : "Закрыт (0)"}
@@ -227,18 +229,17 @@ const Records = ({ workerAccount }) => {
                 <h4>Редактирование путевого листа {changedRecord.ID}</h4>
 
                 <FormControl fullWidth sx={{ mt: 1 }}>
-                  <InputLabel id="record-change-select-sheet">
-                    Выберите ведомость
+                  <InputLabel id="record-change-select-type-gsm">
+                    Выберите ГСМ
                   </InputLabel>
                   <Select
-                    labelId="record-change-select-sheet"
-                    label="Выберите ведомость"
+                    labelId="record-change-select-type-gsm"
+                    label="Выберите ГСМ"
                     defaultValue={99999}
                     onChange={(e) => {
-                      // !продолжить тут!
-                      let tempSheet = e.target.value;
+                      let tempGSM = e.target.value;
 
-                      if (tempSheet === 99999) {
+                      if (tempGSM === 99999) {
                         new Toast({
                           title: "Ошибка при выборе",
                           text: "Этот пукнт не доступен к выбору",
@@ -250,7 +251,7 @@ const Records = ({ workerAccount }) => {
                         let tempThisRecord = {
                           ...inputObjectRecord,
                           ID: changedRecord.ID,
-                          IDsheet: -1,
+                          IDgsm: -1,
                         };
 
                         setInputObjectRecord(tempThisRecord);
@@ -260,17 +261,17 @@ const Records = ({ workerAccount }) => {
                       let tempThisRecord = {
                         ...inputObjectRecord,
                         ID: changedRecord.ID,
-                        IDsheet: tempSheet,
+                        IDgsm: tempGSM,
                       };
 
                       setInputObjectRecord(tempThisRecord);
                     }}
                   >
-                    <MenuItem value={99999}>Выберите ведомость</MenuItem>
-                    {allSheets.map((sheet) => {
+                    <MenuItem value={99999}>Выберите ГСМ</MenuItem>
+                    {allTypesGSM.map((gsm) => {
                       return (
-                        <MenuItem key={sheet.ID} value={sheet.ID}>
-                          {sheet.NumberSheet}
+                        <MenuItem key={gsm.ID} value={gsm.ID}>
+                          {gsm.Name} ({gsm.ID})
                         </MenuItem>
                       );
                     })}
@@ -322,6 +323,56 @@ const Records = ({ workerAccount }) => {
                       return (
                         <MenuItem key={vehicle.ID} value={vehicle.ID}>
                           {vehicle.Model} : {vehicle.Number}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+
+                <FormControl fullWidth sx={{ mt: 1 }}>
+                  <InputLabel id="record-change-select-sheet">
+                    Выберите ведомость
+                  </InputLabel>
+                  <Select
+                    labelId="record-change-select-sheet"
+                    label="Выберите ведомость"
+                    defaultValue={99999}
+                    onChange={(e) => {
+                      let tempSheet = e.target.value;
+
+                      if (tempSheet === 99999) {
+                        new Toast({
+                          title: "Ошибка при выборе",
+                          text: "Этот пукнт не доступен к выбору",
+                          theme: "danger",
+                          autohide: true,
+                          interval: 10000,
+                        });
+
+                        let tempThisRecord = {
+                          ...inputObjectRecord,
+                          ID: changedRecord.ID,
+                          IDsheet: -1,
+                        };
+
+                        setInputObjectRecord(tempThisRecord);
+                        return;
+                      }
+
+                      let tempThisRecord = {
+                        ...inputObjectRecord,
+                        ID: changedRecord.ID,
+                        IDsheet: tempSheet,
+                      };
+
+                      setInputObjectRecord(tempThisRecord);
+                    }}
+                  >
+                    <MenuItem value={99999}>Выберите ведомость</MenuItem>
+                    {allSheets.map((sheet) => {
+                      return (
+                        <MenuItem key={sheet.ID} value={sheet.ID}>
+                          {sheet.NumberSheet}
                         </MenuItem>
                       );
                     })}
@@ -393,56 +444,6 @@ const Records = ({ workerAccount }) => {
                   }}
                 />
 
-                <FormControl fullWidth sx={{ mt: 1 }}>
-                  <InputLabel id="record-change-select-type-gsm">
-                    Выберите ГСМ
-                  </InputLabel>
-                  <Select
-                    labelId="record-change-select-type-gsm"
-                    label="Выберите ГСМ"
-                    defaultValue={99999}
-                    onChange={(e) => {
-                      let tempGSM = e.target.value;
-
-                      if (tempGSM === 99999) {
-                        new Toast({
-                          title: "Ошибка при выборе",
-                          text: "Этот пукнт не доступен к выбору",
-                          theme: "danger",
-                          autohide: true,
-                          interval: 10000,
-                        });
-
-                        let tempThisRecord = {
-                          ...inputObjectRecord,
-                          ID: changedRecord.ID,
-                          IDgsm: -1,
-                        };
-
-                        setInputObjectRecord(tempThisRecord);
-                        return;
-                      }
-
-                      let tempThisRecord = {
-                        ...inputObjectRecord,
-                        ID: changedRecord.ID,
-                        IDgsm: tempGSM,
-                      };
-
-                      setInputObjectRecord(tempThisRecord);
-                    }}
-                  >
-                    <MenuItem value={99999}>Выберите ГСМ</MenuItem>
-                    {allTypesGSM.map((gsm) => {
-                      return (
-                        <MenuItem key={gsm.ID} value={gsm.ID}>
-                          {gsm.Name} ({gsm.ID})
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-
                 <TextField
                   id="standard-basic"
                   label="Введите количество литров"
@@ -454,6 +455,36 @@ const Records = ({ workerAccount }) => {
                       ...inputObjectRecord,
                       ID: changedRecord.ID,
                       Liter: e.target.value,
+                    });
+                  }}
+                />
+
+                <TextField
+                  id="standard-basic"
+                  label="Пробег на момент открытия"
+                  variant="standard"
+                  fullWidth
+                  sx={{ mt: 1 }}
+                  onChange={(e) => {
+                    setInputObjectRecord({
+                      ...inputObjectRecord,
+                      ID: changedRecord.ID,
+                      openMileage: e.target.value,
+                    });
+                  }}
+                />
+
+                <TextField
+                  id="standard-basic"
+                  label="Пробег на момент закрытия"
+                  variant="standard"
+                  fullWidth
+                  sx={{ mt: 1 }}
+                  onChange={(e) => {
+                    setInputObjectRecord({
+                      ...inputObjectRecord,
+                      ID: changedRecord.ID,
+                      closeMileage: e.target.value,
                     });
                   }}
                 />

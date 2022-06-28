@@ -36,7 +36,13 @@ async function changeStatusRecord(
     return;
   }
 
-  record.recStatus = Number(!record.recStatus);
+  if (record.recStatus === 1) {
+    record.recStatus = 0;
+    record.closeMileage = record.IDcar.mileage;
+  } else {
+    record.recStatus = 1;
+    record.closeMileage = null;
+  }
 
   let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
