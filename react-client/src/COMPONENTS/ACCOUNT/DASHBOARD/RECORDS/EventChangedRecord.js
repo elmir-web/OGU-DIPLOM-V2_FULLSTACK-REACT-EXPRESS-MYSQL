@@ -1,21 +1,126 @@
 import Cookies from "js-cookie";
 import Toast from "./../../../../Toast";
 
+import CONFIG from "./../../../../CONFIG.json";
+
 async function eventChangedRecord(
-  funcRequest,
   loadRecords,
   inputObjectRecord,
   setChangedRecord,
-  setInputObjectRecord
+  setInputObjectRecord,
+  changedRecord
 ) {
+  let completedObject = {
+    ...inputObjectRecord,
+    ID: changedRecord.ID,
+  };
+
+  if (
+    !("IDsheet" in completedObject) ||
+    completedObject.IDsheet === null ||
+    completedObject.IDsheet === -1
+  ) {
+    new Toast({
+      title: "Ошибка при изменении путевого листа",
+      text: `Ведомость не выбрана`,
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
+    return;
+  }
+
+  if (
+    !("IDcar" in completedObject) ||
+    completedObject.IDcar === null ||
+    completedObject.IDcar === -1
+  ) {
+    new Toast({
+      title: "Ошибка при изменении путевого листа",
+      text: `Автомобиль не выбран`,
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
+    return;
+  }
+
+  if (
+    !("IDdriver" in completedObject) ||
+    completedObject.IDdriver === null ||
+    completedObject.IDdriver === -1
+  ) {
+    new Toast({
+      title: "Ошибка при изменении путевого листа",
+      text: `Водитель не выбран`,
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
+    return;
+  }
+
+  if (
+    !("NumberPL" in completedObject) ||
+    completedObject.NumberPL === null ||
+    completedObject.NumberPL.length < 3 ||
+    completedObject.NumberPL.length > 10
+  ) {
+    new Toast({
+      title: "Ошибка при изменении ведомости",
+      text: `Поле ввода номера не должно быть пустым и в нем должнобыть от 3 до 10 символов (включительно)`,
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
+    return;
+  }
+
+  if (
+    !("IDgsm" in completedObject) ||
+    completedObject.IDgsm === null ||
+    completedObject.IDgsm === -1
+  ) {
+    new Toast({
+      title: "Ошибка при изменении путевого листа",
+      text: `ГСМ не выбрана`,
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
+    return;
+  }
+
+  if (
+    !("Liter" in completedObject) ||
+    completedObject.Liter === null ||
+    !window.isValidDouble(completedObject.Liter)
+  ) {
+    new Toast({
+      title: "Ошибка при изменении путевого листа",
+      text: `Поле ввода литров не должно быть пустым и должно иметь в себе число вида 3.54`,
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
+    return;
+  }
+
+  console.log();
+
   let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
-  const response = await funcRequest(
-    `/api/record/change`,
-    `PUT`,
-    inputObjectRecord,
-    tempUserAuthCookie
-  );
+  let responseFetch = await fetch(`${CONFIG.URL_BACKEND}/api/record/change`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${tempUserAuthCookie}`,
+    },
+    body: JSON.stringify(completedObject),
+  });
+
+  const { ok, status } = responseFetch;
+  responseFetch = await responseFetch.json();
 
   setChangedRecord(null);
 
@@ -29,19 +134,20 @@ async function eventChangedRecord(
     Liter: null,
   });
 
-  if (response.ok === false && response.status === 400) {
+  if (ok === false && status === 400) {
     new Toast({
       title: "Ошибка при изменении путевого листа",
-      text: response.responseFetch,
+      text: responseFetch,
       theme: "danger",
       autohide: true,
       interval: 10000,
     });
     return;
   }
+
   new Toast({
     title: "Вас ждет успех!",
-    text: response.responseFetch,
+    text: responseFetch,
     theme: "success",
     autohide: true,
     interval: 10000,

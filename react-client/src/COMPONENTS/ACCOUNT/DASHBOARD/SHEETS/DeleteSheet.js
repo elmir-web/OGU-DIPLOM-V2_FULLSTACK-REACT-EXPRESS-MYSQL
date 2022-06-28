@@ -1,12 +1,9 @@
 import Toast from "./../../../../Toast";
 import Cookies from "js-cookie";
 
-async function deleteSheet(
-  sheet,
-  funcRequest,
-  loadSheets,
-  statusAccessEditing
-) {
+import CONFIG from "./../../../../CONFIG.json";
+
+async function deleteSheet(sheet, loadSheets, statusAccessEditing) {
   if (!statusAccessEditing) {
     new Toast({
       title: "Ошибка при удалении ведомости",
@@ -20,17 +17,25 @@ async function deleteSheet(
 
   let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
-  const response = await funcRequest(
-    `/api/sheet/delete/${sheet.ID}`,
-    "DELETE",
-    sheet,
-    tempUserAuthCookie
+  let response = await fetch(
+    `${CONFIG.URL_BACKEND}/api/sheet/delete/${sheet.ID}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${tempUserAuthCookie}`,
+      },
+      body: JSON.stringify(sheet),
+    }
   );
 
-  if (response.ok === false && response.status === 400) {
+  const { ok, status } = response;
+  response = await response.json();
+
+  if (ok === false && status === 400) {
     new Toast({
       title: "Ошибка при удалении ведомости",
-      text: response.responseFetch,
+      text: response,
       theme: "danger",
       autohide: true,
       interval: 10000,
@@ -40,7 +45,7 @@ async function deleteSheet(
 
   new Toast({
     title: "Вас ждет успех!",
-    text: response.responseFetch,
+    text: response,
     theme: "success",
     autohide: true,
     interval: 10000,

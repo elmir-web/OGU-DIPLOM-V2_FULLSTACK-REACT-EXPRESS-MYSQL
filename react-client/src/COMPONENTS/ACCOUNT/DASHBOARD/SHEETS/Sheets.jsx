@@ -11,6 +11,8 @@ import Select from "@mui/material/Select";
 import Toast from "./../../../../Toast";
 import MenuItem from "@mui/material/MenuItem";
 
+import CONFIG from "./../../../../CONFIG.json";
+
 import "./Sheets.scss";
 
 import deleteSheet from "./DeleteSheet";
@@ -18,7 +20,7 @@ import beginUpdateSheet from "./BeginUpdateSheet";
 import eventChangedSheet from "./EventChangedSheet";
 import eventCreatedSheet from "./EventCreatedSheet";
 
-const Sheets = ({ funcRequest, workerAccount }) => {
+const Sheets = ({ workerAccount }) => {
   let [statusAccessEditing, setStatusAccessEditing] = useState(false);
   let [allSheets, setSheets] = useState([]);
   let [allAutoGarages, setAutoGarages] = useState([]);
@@ -38,22 +40,32 @@ const Sheets = ({ funcRequest, workerAccount }) => {
   async function loadSheets() {
     let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
-    const tempGetAccess = await funcRequest(
-      "/api/sheet/access",
-      "GET",
-      null,
-      tempUserAuthCookie
-    );
+    let tempGetAccess = await fetch(`${CONFIG.URL_BACKEND}/api/sheet/access`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${tempUserAuthCookie}`,
+      },
+    });
 
-    setStatusAccessEditing(tempGetAccess.responseFetch.access);
+    tempGetAccess = await tempGetAccess.json();
 
-    const sheets = await funcRequest(`/api/sheets/get`);
+    setStatusAccessEditing(tempGetAccess.access);
 
-    setSheets(sheets.responseFetch);
+    let sheets = await fetch(`${CONFIG.URL_BACKEND}/api/sheets/get`, {
+      method: "GET",
+    });
 
-    const autoGarages = await funcRequest(`/api/autogarage/get/`);
+    sheets = await sheets.json();
 
-    setAutoGarages(autoGarages.responseFetch);
+    setSheets(sheets);
+
+    let autoGarages = await fetch(`${CONFIG.URL_BACKEND}/api/autogarage/get/`, {
+      method: "GET",
+    });
+
+    autoGarages = await autoGarages.json();
+
+    setAutoGarages(autoGarages);
   }
 
   return (
@@ -90,12 +102,7 @@ const Sheets = ({ funcRequest, workerAccount }) => {
                         color="error"
                         size="small"
                         onClick={() => {
-                          deleteSheet(
-                            sheet,
-                            funcRequest,
-                            loadSheets,
-                            statusAccessEditing
-                          );
+                          deleteSheet(sheet, loadSheets, statusAccessEditing);
                         }}
                       >
                         <DeleteIcon fontSize="small" />
@@ -195,6 +202,14 @@ const Sheets = ({ funcRequest, workerAccount }) => {
                           autohide: true,
                           interval: 10000,
                         });
+
+                        let tempThisSheet = {
+                          ...inputObjectSheet,
+                          ID: changedSheet.ID,
+                          IDgarage: -1,
+                        };
+
+                        setInputObjectSheet(tempThisSheet);
                         return;
                       }
 
@@ -235,7 +250,6 @@ const Sheets = ({ funcRequest, workerAccount }) => {
                   fullWidth
                   onClick={() =>
                     eventChangedSheet(
-                      funcRequest,
                       loadSheets,
                       inputObjectSheet,
                       setChangedSheet,
@@ -278,12 +292,12 @@ const Sheets = ({ funcRequest, workerAccount }) => {
               id="date"
               label="Дата ведомости"
               type="date"
-              value={inputObjectSheet.DateSheet}
               sx={{ mt: 1 }}
               fullWidth
               InputLabelProps={{
                 shrink: true,
               }}
+              defaultValue={moment(new Date()).format("YYYY-MM-DD")}
               onChange={(e) => {
                 setCreateSheet({
                   ...createSheet,
@@ -311,6 +325,13 @@ const Sheets = ({ funcRequest, workerAccount }) => {
                       autohide: true,
                       interval: 10000,
                     });
+
+                    let tempThisSheet = {
+                      ...createSheet,
+                      IDgarage: -1,
+                    };
+
+                    setCreateSheet(tempThisSheet);
                     return;
                   }
 
@@ -349,7 +370,6 @@ const Sheets = ({ funcRequest, workerAccount }) => {
               fullWidth
               onClick={async () =>
                 eventCreatedSheet(
-                  funcRequest,
                   loadSheets,
                   createSheet,
                   setCreateSheet,

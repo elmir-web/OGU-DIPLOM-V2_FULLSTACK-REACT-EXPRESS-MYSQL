@@ -96,8 +96,6 @@ class SheetController {
 
     const idSheet = req.params.id;
 
-    console.log(idSheet);
-
     let [checkRecordForSheet] = await global.connectMySQL.execute(
       `SELECT * FROM record WHERE IDsheet = ${idSheet}`
     );

@@ -37,6 +37,7 @@ class ReportController {
         newSheets.push(tempSheets[index]);
       }
     }
+
     res.status(200).json(newSheets);
   }
 
@@ -62,11 +63,11 @@ class ReportController {
     let reqArraySheetInfo = [];
 
     const [requestReportHeaderRows] = await global.connectMySQL.execute(`SELECT
-    base.Name,
-    garage.Name,
-    sheet.NumberSheet,
-    sheet.DateSheet,
-    worker.FIO
+    base.Name as 'Название базы',
+    garage.Name as 'Название гаража',
+    sheet.NumberSheet as 'Учетный номер ведомости',
+    sheet.DateSheet as 'Дата ведомости',
+    worker.FIO as 'ФИО подписанта'
     FROM
     sheet
     INNER JOIN garage ON garage.ID = sheet.IDgarage
@@ -77,12 +78,12 @@ class ReportController {
     reqArraySheetInfo.push(requestReportHeaderRows);
 
     const [requestReportBodyRows] = await global.connectMySQL.execute(`SELECT
-    car.Model,
-    car.Number,
-    record.NumberPL,
-    worker.FIO,
-    gsm.Name,
-    record.Liter
+    car.Model as 'Модель автомобиля',
+    car.Number as 'Гос.номер',
+    record.NumberPL as 'Учетный номе путевого листа',
+    worker.FIO as 'Водитель',
+    gsm.Name as 'Название ГСМ',
+    record.Liter as 'Выданное ГСМ'
     FROM
     sheet
     INNER JOIN record ON record.IDsheet = sheet.ID

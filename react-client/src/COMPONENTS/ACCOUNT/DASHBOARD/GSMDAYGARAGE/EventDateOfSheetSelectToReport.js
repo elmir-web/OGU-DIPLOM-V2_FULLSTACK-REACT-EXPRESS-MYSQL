@@ -1,10 +1,11 @@
 import Toast from "./../../../../Toast";
 import Cookies from "js-cookie";
 
+import CONFIG from "./../../../../CONFIG.json";
+
 async function eventDateOfSheetSelectToReport(
   setSheetLoaded,
   setDivTableReport,
-  funcRequest,
   garageSelected,
   sheetSelected,
   setReportGSM,
@@ -29,6 +30,7 @@ async function eventDateOfSheetSelectToReport(
       autohide: true,
       interval: 10000,
     });
+    return;
   }
 
   setSheetLoaded(false);
@@ -41,14 +43,21 @@ async function eventDateOfSheetSelectToReport(
 
   let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
-  const report = await funcRequest(
-    `/api/gsm-day-garage/get-report/get`,
-    "POST",
-    sendObject,
-    tempUserAuthCookie
+  let responseFetch = await fetch(
+    `${CONFIG.URL_BACKEND}/api/gsm-day-garage/get-report/get`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${tempUserAuthCookie}`,
+      },
+      body: JSON.stringify(sendObject),
+    }
   );
 
-  setReportGSM(report.responseFetch);
+  responseFetch = await responseFetch.json();
+
+  setReportGSM(responseFetch);
 }
 
 export default eventDateOfSheetSelectToReport;

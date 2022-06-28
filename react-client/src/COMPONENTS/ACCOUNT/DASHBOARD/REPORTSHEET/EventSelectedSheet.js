@@ -1,10 +1,11 @@
 import Toast from "./../../../../Toast";
 import Cookies from "js-cookie";
 
+import CONFIG from "./../../../../CONFIG.json";
+
 async function eventSelectedSheet(
   sheetSelected,
   setDivSheetHidden,
-  funcRequest,
   setSheetReport,
   statusAccessEditing
 ) {
@@ -34,14 +35,19 @@ async function eventSelectedSheet(
 
   let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
-  const report = await funcRequest(
-    `/api/report-sheet/get/${sheetSelected}`,
-    "GET",
-    null,
-    tempUserAuthCookie
+  let report = await fetch(
+    `${CONFIG.URL_BACKEND}/api/report-sheet/get/${sheetSelected}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${tempUserAuthCookie}`,
+      },
+    }
   );
 
-  setSheetReport(report.responseFetch);
+  report = await report.json();
+
+  setSheetReport(report);
 }
 
 export default eventSelectedSheet;

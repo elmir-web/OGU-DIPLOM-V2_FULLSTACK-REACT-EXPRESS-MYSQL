@@ -1,10 +1,11 @@
 import Toast from "./../../../../Toast";
 import Cookies from "js-cookie";
 
+import CONFIG from "./../../../../CONFIG.json";
+
 async function eventGarageSelectToReport(
   garageSelected,
   setDivGarageHidden,
-  funcRequest,
   setSheetsToGarage,
   setSheetLoaded,
   statusAccessEditing
@@ -35,14 +36,19 @@ async function eventGarageSelectToReport(
 
   let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
-  const sheets = await funcRequest(
-    `/api/gsm-day-garage/get-sheet/get/${garageSelected}`,
-    "GET",
-    null,
-    tempUserAuthCookie
+  let sheets = await fetch(
+    `${CONFIG.URL_BACKEND}/api/gsm-day-garage/get-sheet/get/${garageSelected}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${tempUserAuthCookie}`,
+      },
+    }
   );
 
-  setSheetsToGarage(sheets.responseFetch);
+  sheets = await sheets.json();
+
+  setSheetsToGarage(sheets);
   setSheetLoaded(true);
 }
 

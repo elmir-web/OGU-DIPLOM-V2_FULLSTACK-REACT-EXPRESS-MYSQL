@@ -7,9 +7,13 @@ import Toast from "./../../../../Toast";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 
+import "./ReportSheet.scss";
+
+import CONFIG from "./../../../../CONFIG.json";
+
 import eventSelectedSheet from "./EventSelectedSheet";
 
-const ReportSheet = ({ funcRequest }) => {
+const ReportSheet = ({}) => {
   let [statusAccessEditing, setStatusAccessEditing] = useState(false);
   let [allSheets, setSheets] = useState([]);
   let [sheetSelected, setSheetSelected] = useState(null);
@@ -22,18 +26,24 @@ const ReportSheet = ({ funcRequest }) => {
   async function loadComponent() {
     let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
-    const tempGetAccess = await funcRequest(
-      "/api/sheet/access",
-      "GET",
-      null,
-      tempUserAuthCookie
-    );
+    let tempGetAccess = await fetch(`${CONFIG.URL_BACKEND}/api/sheet/access`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${tempUserAuthCookie}`,
+      },
+    });
 
-    setStatusAccessEditing(tempGetAccess.responseFetch.access);
+    tempGetAccess = await tempGetAccess.json();
 
-    const sheets = await funcRequest(`/api/sheets/get`);
+    setStatusAccessEditing(tempGetAccess.access);
 
-    setSheets(sheets.responseFetch);
+    let sheets = await fetch(`${CONFIG.URL_BACKEND}/api/sheets/get`, {
+      method: "GET",
+    });
+
+    sheets = await sheets.json();
+
+    setSheets(sheets);
   }
 
   return (
@@ -57,6 +67,8 @@ const ReportSheet = ({ funcRequest }) => {
                     autohide: true,
                     interval: 10000,
                   });
+
+                  setSheetSelected(null);
                   return;
                 }
 
@@ -67,7 +79,9 @@ const ReportSheet = ({ funcRequest }) => {
               {allSheets.map((sheet) => {
                 return (
                   <MenuItem key={sheet.ID} value={sheet.ID}>
-                    {sheet.NumberSheet}
+                    {sheet.NumberSheet} - {sheet.DateSheet} -{" "}
+                    {sheet.IDgarage.ID}:{sheet.IDgarage.Name} -{" "}
+                    {sheet.IDsigner.ID}:{sheet.IDsigner.FIO}
                   </MenuItem>
                 );
               })}
@@ -83,7 +97,6 @@ const ReportSheet = ({ funcRequest }) => {
               eventSelectedSheet(
                 sheetSelected,
                 setDivSheetHidden,
-                funcRequest,
                 setSheetReport,
                 statusAccessEditing
               )
@@ -93,60 +106,64 @@ const ReportSheet = ({ funcRequest }) => {
           </Button>
         </div>
       ) : (
-        <div className="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>Гараж</th>
-                <th>Номер ведомости</th>
-                <th>Дата</th>
-                <th>Подписант</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sheetReport[0]?.map((rep, index) => {
-                return (
-                  <tr key={index}>
-                    <td>{rep.Name}</td>
-                    <td>{rep.NumberSheet}</td>
-                    <td>{rep.DateSheet}</td>
-                    <td>{rep.FIO}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+        <div>
+          <div className="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Автобаза</th>
+                  <th>Гараж</th>
+                  <th>Номер ведомости</th>
+                  <th>Дата</th>
+                  <th>Подписант</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sheetReport[0]?.map((rep, index) => {
+                  return (
+                    <tr key={index}>
+                      <td>{rep["Название базы"]}</td>
+                      <td>{rep["Название гаража"]}</td>
+                      <td>{rep["Учетный номер ведомости"]}</td>
+                      <td>{rep["Дата ведомости"]}</td>
+                      <td>{rep["ФИО подписанта"]}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
 
-          <br />
-          <br />
-          <br />
+            <br />
+            <br />
+            <br />
 
-          <table>
-            <thead>
-              <tr>
-                <th>Автомобиль</th>
-                <th>Номер</th>
-                <th>Номер путевого листа</th>
-                <th>Водитель</th>
-                <th>ГСМ</th>
-                <th>Литры</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sheetReport[1]?.map((rep, index) => {
-                return (
-                  <tr key={index}>
-                    <td>{rep.Model}</td>
-                    <td>{rep.Number}</td>
-                    <td>{rep.NumberPL}</td>
-                    <td>{rep.FIO}</td>
-                    <td>{rep.Name}</td>
-                    <td>{rep.Liter}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+            <table>
+              <thead>
+                <tr>
+                  <th>Автомобиль</th>
+                  <th>Номер</th>
+                  <th>Номер путевого листа</th>
+                  <th>Водитель</th>
+                  <th>ГСМ</th>
+                  <th>Литры</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sheetReport[1]?.map((rep, index) => {
+                  return (
+                    <tr key={index}>
+                      <td>{rep["Модель автомобиля"]}</td>
+                      <td>{rep["Гос.номер"]}</td>
+                      <td>{rep["Учетный номе путевого листа"]}</td>
+                      <td>{rep["Водитель"]}</td>
+                      <td>{rep["Название ГСМ"]}</td>
+                      <td>{rep["Выданное ГСМ"]}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
 
           <Button
             variant="contained"

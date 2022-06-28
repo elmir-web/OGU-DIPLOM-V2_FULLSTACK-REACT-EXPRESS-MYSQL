@@ -2,8 +2,9 @@ import Cookies from "js-cookie";
 import Toast from "./../../../../Toast";
 import moment from "moment";
 
+import CONFIG from "./../../../../CONFIG.json";
+
 async function eventCreatedSheet(
-  funcRequest,
   loadSheets,
   createSheet,
   setCreateSheet,
@@ -22,23 +23,63 @@ async function eventCreatedSheet(
 
   let tempObjectCreatedSheetSend = {
     ...createSheet,
-    DateSheet: moment(new Date()).format("YYYY-MM-DD"),
     IDsigner: workerAccount.ID,
   };
 
-  let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
-
-  const response = await funcRequest(
-    `/api/sheet/create`,
-    "POST",
-    tempObjectCreatedSheetSend,
-    tempUserAuthCookie
-  );
-
-  if (response.ok === false && response.status === 400) {
+  if (
+    !("NumberSheet" in tempObjectCreatedSheetSend) ||
+    tempObjectCreatedSheetSend.NumberSheet.length < 3 ||
+    tempObjectCreatedSheetSend.NumberSheet.length > 10
+  ) {
     new Toast({
       title: "Ошибка при создании ведомости",
-      text: response.responseFetch,
+      text: `Поле ввода номера не должно быть пустым и в нем должнобыть от 3 до 10 символов (включительно)`,
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
+    return;
+  }
+
+  if (tempObjectCreatedSheetSend.DateSheet === undefined) {
+    tempObjectCreatedSheetSend = {
+      ...tempObjectCreatedSheetSend,
+      DateSheet: moment(new Date()).format("YYYY-MM-DD"),
+    };
+  }
+
+  if (
+    !("IDgarage" in tempObjectCreatedSheetSend) ||
+    tempObjectCreatedSheetSend.IDgarage === -1
+  ) {
+    new Toast({
+      title: "Ошибка при создании ведомости",
+      text: `Гараж не выбран`,
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
+    return;
+  }
+
+  let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
+
+  let responseFetch = await fetch(`${CONFIG.URL_BACKEND}/api/sheet/create`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${tempUserAuthCookie}`,
+    },
+    body: JSON.stringify(tempObjectCreatedSheetSend),
+  });
+
+  const { ok, status } = responseFetch;
+  responseFetch = await responseFetch.json();
+
+  if (ok === false && status === 400) {
+    new Toast({
+      title: "Ошибка при создании ведомости",
+      text: responseFetch,
       theme: "danger",
       autohide: true,
       interval: 10000,
@@ -48,7 +89,7 @@ async function eventCreatedSheet(
 
   new Toast({
     title: "Вас ждет успех!",
-    text: response.responseFetch,
+    text: responseFetch,
     theme: "success",
     autohide: true,
     interval: 10000,

@@ -38,7 +38,7 @@ const DashboardNotFound = ({}) => {
   return <div></div>;
 };
 
-const Dashboard = ({ funcRequest, workerAccount, setWorkerAccount }) => {
+const Dashboard = ({ workerAccount, setWorkerAccount }) => {
   let navigate = useNavigate();
 
   useEffect(loadComponentDashboard, []);
@@ -172,30 +172,14 @@ const Dashboard = ({ funcRequest, workerAccount, setWorkerAccount }) => {
             />
             <Route
               path="sheets"
-              element={
-                <Sheets
-                  funcRequest={funcRequest}
-                  workerAccount={workerAccount}
-                />
-              }
+              element={<Sheets workerAccount={workerAccount} />}
             />
             <Route
               path="records"
-              element={
-                <Records
-                  funcRequest={funcRequest}
-                  workerAccount={workerAccount}
-                />
-              }
+              element={<Records workerAccount={workerAccount} />}
             />
-            <Route
-              path="gsm-day-garage"
-              element={<GSMDayGarage funcRequest={funcRequest} />}
-            />
-            <Route
-              path="report-sheet"
-              element={<ReportSheet funcRequest={funcRequest} />}
-            />
+            <Route path="gsm-day-garage" element={<GSMDayGarage />} />
+            <Route path="report-sheet" element={<ReportSheet />} />
           </Routes>
         </div>
       </main>

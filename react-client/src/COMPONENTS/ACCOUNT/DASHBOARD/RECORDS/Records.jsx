@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
+import LockIcon from "@mui/icons-material/Lock";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
@@ -10,12 +11,17 @@ import Toast from "./../../../../Toast";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 
+import CONFIG from "./../../../../CONFIG.json";
+
+import "./Records.scss";
+
 import deleteRecord from "./DeleteRecord";
 import beginUpdateRecord from "./BeginUpdateRecord";
+import closeStatusRecord from "./CloseStatusRecord";
 import eventChangedRecord from "./EventChangedRecord";
 import eventCreatedRecord from "./EventCreatedRecord";
 
-const Records = ({ funcRequest, workerAccount }) => {
+const Records = ({ workerAccount }) => {
   let [statusAccessEditing, setStatusAccessEditing] = useState(false);
   let [allRecords, setRecords] = useState([]);
   let [changedRecord, setChangedRecord] = useState(null);
@@ -40,42 +46,64 @@ const Records = ({ funcRequest, workerAccount }) => {
   async function loadRecords() {
     let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
-    const tempGetAccess = await funcRequest(
-      "/api/record/access",
-      "GET",
-      null,
-      tempUserAuthCookie
-    );
+    let tempGetAccess = await fetch(`${CONFIG.URL_BACKEND}/api/record/access`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${tempUserAuthCookie}`,
+      },
+    });
 
-    setStatusAccessEditing(tempGetAccess.responseFetch.access);
+    tempGetAccess = await tempGetAccess.json();
 
-    const records = await funcRequest(`/api/records/get/`);
+    setStatusAccessEditing(tempGetAccess.access);
 
-    setRecords(records.responseFetch);
+    let records = await fetch(`${CONFIG.URL_BACKEND}/api/records/get/`, {
+      method: "GET",
+    });
 
-    const sheets = await funcRequest(`/api/sheets/get`);
+    records = await records.json();
 
-    sheets.responseFetch = sheets.responseFetch.filter((sheet) => {
+    setRecords(records);
+
+    let sheets = await fetch(`${CONFIG.URL_BACKEND}/api/sheets/get`, {
+      method: "GET",
+    });
+
+    sheets = await sheets.json();
+
+    sheets = sheets.filter((sheet) => {
       return sheet.IDsigner.ID === workerAccount.ID;
     });
 
-    setSheets(sheets.responseFetch);
+    setSheets(sheets);
 
-    const vehicles = await funcRequest(`/api/vehicles/get`);
+    let vehicles = await fetch(`${CONFIG.URL_BACKEND}/api/vehicles/get`, {
+      method: "GET",
+    });
 
-    setVehicles(vehicles.responseFetch);
+    vehicles = await vehicles.json();
 
-    let workers = await funcRequest(`/api/workers/get`);
+    setVehicles(vehicles);
 
-    workers.responseFetch = workers.responseFetch.filter((worker) => {
+    let workers = await fetch(`${CONFIG.URL_BACKEND}/api/workers/get`, {
+      method: "GET",
+    });
+
+    workers = await workers.json();
+
+    workers = workers.filter((worker) => {
       return worker.Function.ID === 1;
     });
 
-    setWorkers(workers.responseFetch);
+    setWorkers(workers);
 
-    const typesGSM = await funcRequest(`/api/type-gsm/get`);
+    let typesGSM = await fetch(`${CONFIG.URL_BACKEND}/api/type-gsm/get`, {
+      method: "GET",
+    });
 
-    setTypesGSM(typesGSM.responseFetch);
+    typesGSM = await typesGSM.json();
+
+    setTypesGSM(typesGSM);
   }
 
   return (
@@ -85,12 +113,15 @@ const Records = ({ funcRequest, workerAccount }) => {
           <thead>
             <tr>
               <th>ID путевого листа</th>
-              <th>Ведомость (ID)</th>
+              <th>ГСМ (ID)</th>
               <th>Автомобиль (ID)</th>
+              <th>Ведомость (ID)</th>
               <th>Водитель (ID)</th>
               <th>Номер путевого листа</th>
-              <th>ГСМ (ID)</th>
               <th>Литры</th>
+              <th>Пробег: Открытие</th>
+              <th>Пробег: Закрытие</th>
+              <th>Статус</th>
               <th>Действия</th>
             </tr>
           </thead>
@@ -101,21 +132,28 @@ const Records = ({ funcRequest, workerAccount }) => {
                   <tr key={record.ID}>
                     <td>{record.ID}</td>
                     <td>
-                      {record.IDsheet.NumberSheet} ({record.IDsheet.ID})
+                      {record.IDgsm.Name} ({record.IDgsm.ID})
                     </td>
                     <td>
                       {record.IDcar.Model} : {record.IDcar.Number} (
                       {record.IDcar.ID})
                     </td>
                     <td>
+                      {record.IDsheet.NumberSheet} ({record.IDsheet.ID})
+                    </td>
+                    <td>
                       {record.IDdriver.FIO} ({record.IDdriver.ID})
                     </td>
                     <td>{record.NumberPL}</td>
-                    <td>
-                      {record.IDgsm.Name} ({record.IDgsm.ID})
-                    </td>
                     <td>{record.Liter}</td>
+                    <td>{record.openMileage}</td>
                     <td>
+                      {!record.closeMileage ? "Не закрыт" : record.closeMileage}
+                    </td>
+                    <td>
+                      {record.recStatus === 1 ? "Открыт (1)" : "Закрыт (0)"}
+                    </td>
+                    <td className="table-buttons">
                       <Button
                         variant="outlined"
                         color="error"
@@ -123,7 +161,6 @@ const Records = ({ funcRequest, workerAccount }) => {
                         onClick={() => {
                           deleteRecord(
                             record,
-                            funcRequest,
                             loadRecords,
                             statusAccessEditing
                           );
@@ -149,6 +186,24 @@ const Records = ({ funcRequest, workerAccount }) => {
                         }}
                       >
                         <BorderColorIcon fontSize="small" />
+                      </Button>
+
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        size="small"
+                        sx={{
+                          ml: 2,
+                        }}
+                        onClick={() => {
+                          closeStatusRecord(
+                            statusAccessEditing,
+                            record,
+                            workerAccount
+                          );
+                        }}
+                      >
+                        <LockIcon fontSize="small" />
                       </Button>
                     </td>
                   </tr>
@@ -179,6 +234,7 @@ const Records = ({ funcRequest, workerAccount }) => {
                     label="Выберите ведомость"
                     defaultValue={99999}
                     onChange={(e) => {
+                      // !продолжить тут!
                       let tempSheet = e.target.value;
 
                       if (tempSheet === 99999) {
@@ -189,6 +245,14 @@ const Records = ({ funcRequest, workerAccount }) => {
                           autohide: true,
                           interval: 10000,
                         });
+
+                        let tempThisRecord = {
+                          ...inputObjectRecord,
+                          ID: changedRecord.ID,
+                          IDsheet: -1,
+                        };
+
+                        setInputObjectRecord(tempThisRecord);
                         return;
                       }
 
@@ -216,6 +280,7 @@ const Records = ({ funcRequest, workerAccount }) => {
                   <InputLabel id="record-change-select-auto">
                     Выберите автомобиль
                   </InputLabel>
+
                   <Select
                     labelId="record-change-select-auto"
                     label="Выберите автомобиль"
@@ -231,6 +296,14 @@ const Records = ({ funcRequest, workerAccount }) => {
                           autohide: true,
                           interval: 10000,
                         });
+
+                        let tempThisRecord = {
+                          ...inputObjectRecord,
+                          ID: changedRecord.ID,
+                          IDcar: -1,
+                        };
+
+                        setInputObjectRecord(tempThisRecord);
                         return;
                       }
 
@@ -273,6 +346,14 @@ const Records = ({ funcRequest, workerAccount }) => {
                           autohide: true,
                           interval: 10000,
                         });
+
+                        let tempThisRecord = {
+                          ...inputObjectRecord,
+                          ID: changedRecord.ID,
+                          IDdriver: -1,
+                        };
+
+                        setInputObjectRecord(tempThisRecord);
                         return;
                       }
 
@@ -330,6 +411,14 @@ const Records = ({ funcRequest, workerAccount }) => {
                           autohide: true,
                           interval: 10000,
                         });
+
+                        let tempThisRecord = {
+                          ...inputObjectRecord,
+                          ID: changedRecord.ID,
+                          IDgsm: -1,
+                        };
+
+                        setInputObjectRecord(tempThisRecord);
                         return;
                       }
 
@@ -375,11 +464,11 @@ const Records = ({ funcRequest, workerAccount }) => {
                   fullWidth
                   onClick={() =>
                     eventChangedRecord(
-                      funcRequest,
                       loadRecords,
                       inputObjectRecord,
                       setChangedRecord,
-                      setInputObjectRecord
+                      setInputObjectRecord,
+                      changedRecord
                     )
                   }
                 >
@@ -400,17 +489,17 @@ const Records = ({ funcRequest, workerAccount }) => {
             </h4>
 
             <FormControl fullWidth sx={{ mt: 1 }}>
-              <InputLabel id="record-change-select-sheet">
-                Выберите ведомость
+              <InputLabel id="record-change-select-type-gsm">
+                Выберите ГСМ
               </InputLabel>
               <Select
-                labelId="record-change-select-sheet"
-                label="Выберите ведомость"
+                labelId="record-change-select-type-gsm"
+                label="Выберите ГСМ"
                 defaultValue={99999}
                 onChange={(e) => {
-                  let tempSheet = e.target.value;
+                  let tempGSM = e.target.value;
 
-                  if (tempSheet === 99999) {
+                  if (tempGSM === 99999) {
                     new Toast({
                       title: "Ошибка при выборе",
                       text: "Этот пукнт не доступен к выбору",
@@ -418,22 +507,29 @@ const Records = ({ funcRequest, workerAccount }) => {
                       autohide: true,
                       interval: 10000,
                     });
+
+                    let tempThisRecord = {
+                      ...createRecord,
+                      IDgsm: -1,
+                    };
+
+                    setCreateRecord(tempThisRecord);
                     return;
                   }
 
                   let tempThisRecord = {
                     ...createRecord,
-                    IDsheet: tempSheet,
+                    IDgsm: tempGSM,
                   };
 
                   setCreateRecord(tempThisRecord);
                 }}
               >
-                <MenuItem value={99999}>Выберите ведомость</MenuItem>
-                {allSheets.map((sheet) => {
+                <MenuItem value={99999}>Выберите ГСМ</MenuItem>
+                {allTypesGSM.map((gsm) => {
                   return (
-                    <MenuItem key={sheet.ID} value={sheet.ID}>
-                      {sheet.NumberSheet}
+                    <MenuItem key={gsm.ID} value={gsm.ID}>
+                      {gsm.Name} ({gsm.ID})
                     </MenuItem>
                   );
                 })}
@@ -459,6 +555,13 @@ const Records = ({ funcRequest, workerAccount }) => {
                       autohide: true,
                       interval: 10000,
                     });
+
+                    let tempThisRecord = {
+                      ...createRecord,
+                      IDcar: -1,
+                    };
+
+                    setCreateRecord(tempThisRecord);
                     return;
                   }
 
@@ -475,6 +578,54 @@ const Records = ({ funcRequest, workerAccount }) => {
                   return (
                     <MenuItem key={vehicle.ID} value={vehicle.ID}>
                       {vehicle.Model} : {vehicle.Number}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+
+            <FormControl fullWidth sx={{ mt: 1 }}>
+              <InputLabel id="record-change-select-sheet">
+                Выберите ведомость
+              </InputLabel>
+              <Select
+                labelId="record-change-select-sheet"
+                label="Выберите ведомость"
+                defaultValue={99999}
+                onChange={(e) => {
+                  let tempSheet = e.target.value;
+
+                  if (tempSheet === 99999) {
+                    new Toast({
+                      title: "Ошибка при выборе",
+                      text: "Этот пукнт не доступен к выбору",
+                      theme: "danger",
+                      autohide: true,
+                      interval: 10000,
+                    });
+
+                    let tempThisRecord = {
+                      ...createRecord,
+                      IDsheet: -1,
+                    };
+
+                    setCreateRecord(tempThisRecord);
+                    return;
+                  }
+
+                  let tempThisRecord = {
+                    ...createRecord,
+                    IDsheet: tempSheet,
+                  };
+
+                  setCreateRecord(tempThisRecord);
+                }}
+              >
+                <MenuItem value={99999}>Выберите ведомость</MenuItem>
+                {allSheets.map((sheet) => {
+                  return (
+                    <MenuItem key={sheet.ID} value={sheet.ID}>
+                      {sheet.NumberSheet}
                     </MenuItem>
                   );
                 })}
@@ -500,6 +651,13 @@ const Records = ({ funcRequest, workerAccount }) => {
                       autohide: true,
                       interval: 10000,
                     });
+
+                    let tempThisRecord = {
+                      ...createRecord,
+                      IDdriver: -1,
+                    };
+
+                    setCreateRecord(tempThisRecord);
                     return;
                   }
 
@@ -536,47 +694,6 @@ const Records = ({ funcRequest, workerAccount }) => {
               }}
             />
 
-            <FormControl fullWidth sx={{ mt: 1 }}>
-              <InputLabel id="record-change-select-type-gsm">
-                Выберите ГСМ
-              </InputLabel>
-              <Select
-                labelId="record-change-select-type-gsm"
-                label="Выберите ГСМ"
-                defaultValue={99999}
-                onChange={(e) => {
-                  let tempGSM = e.target.value;
-
-                  if (tempGSM === 99999) {
-                    new Toast({
-                      title: "Ошибка при выборе",
-                      text: "Этот пукнт не доступен к выбору",
-                      theme: "danger",
-                      autohide: true,
-                      interval: 10000,
-                    });
-                    return;
-                  }
-
-                  let tempThisRecord = {
-                    ...createRecord,
-                    IDgsm: tempGSM,
-                  };
-
-                  setCreateRecord(tempThisRecord);
-                }}
-              >
-                <MenuItem value={99999}>Выберите ГСМ</MenuItem>
-                {allTypesGSM.map((gsm) => {
-                  return (
-                    <MenuItem key={gsm.ID} value={gsm.ID}>
-                      {gsm.Name} ({gsm.ID})
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
-
             <TextField
               id="standard-basic"
               label="Введите количество литров"
@@ -591,18 +708,27 @@ const Records = ({ funcRequest, workerAccount }) => {
               }}
             />
 
+            <TextField
+              id="standard-basic"
+              label="Пробег на момент открытия"
+              variant="standard"
+              fullWidth
+              sx={{ mt: 1 }}
+              onChange={(e) => {
+                setCreateRecord({
+                  ...createRecord,
+                  openMileage: e.target.value,
+                });
+              }}
+            />
+
             <Button
               variant="contained"
               color="success"
               sx={{ mt: 1 }}
               fullWidth
               onClick={() =>
-                eventCreatedRecord(
-                  funcRequest,
-                  loadRecords,
-                  createRecord,
-                  setCreateRecord
-                )
+                eventCreatedRecord(loadRecords, createRecord, setCreateRecord)
               }
             >
               Создать

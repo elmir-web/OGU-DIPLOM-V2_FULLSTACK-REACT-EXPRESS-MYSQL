@@ -7,10 +7,14 @@ import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
 
+import "./GsmDayGarage.scss";
+
+import CONFIG from "./../../../../CONFIG.json";
+
 import eventGarageSelectToReport from "./EventGarageSelectToReport";
 import eventDateOfSheetSelectToReport from "./EventDateOfSheetSelectToReport";
 
-const GsmDayGarage = ({ funcRequest }) => {
+const GsmDayGarage = ({}) => {
   let [statusAccessEditing, setStatusAccessEditing] = useState(false);
   let [allAutoGarages, setAutoGarages] = useState([]);
   let [garageSelected, setSelectGarage] = useState(null);
@@ -27,18 +31,24 @@ const GsmDayGarage = ({ funcRequest }) => {
   async function loadComponent() {
     let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
-    const tempGetAccess = await funcRequest(
-      "/api/sheet/access",
-      "GET",
-      null,
-      tempUserAuthCookie
-    );
+    let tempGetAccess = await fetch(`${CONFIG.URL_BACKEND}/api/sheet/access`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${tempUserAuthCookie}`,
+      },
+    });
 
-    setStatusAccessEditing(tempGetAccess.responseFetch.access);
+    tempGetAccess = await tempGetAccess.json();
 
-    const autoGarages = await funcRequest(`/api/autogarage/get/`);
+    setStatusAccessEditing(tempGetAccess.access);
 
-    setAutoGarages(autoGarages.responseFetch);
+    let autoGarages = await fetch(`${CONFIG.URL_BACKEND}/api/autogarage/get/`, {
+      method: "GET",
+    });
+
+    autoGarages = await autoGarages.json();
+
+    setAutoGarages(autoGarages);
   }
 
   return (
@@ -100,7 +110,6 @@ const GsmDayGarage = ({ funcRequest }) => {
               eventGarageSelectToReport(
                 garageSelected,
                 setDivGarageHidden,
-                funcRequest,
                 setSheetsToGarage,
                 setSheetLoaded,
                 statusAccessEditing
@@ -162,7 +171,6 @@ const GsmDayGarage = ({ funcRequest }) => {
               eventDateOfSheetSelectToReport(
                 setSheetLoaded,
                 setDivTableReport,
-                funcRequest,
                 garageSelected,
                 sheetSelected,
                 setReportGSM,

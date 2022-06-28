@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Время создания: Июн 27 2022 г., 13:03
+-- Время создания: Июн 28 2022 г., 11:55
 -- Версия сервера: 5.7.38-0ubuntu0.18.04.1
 -- Версия PHP: 7.2.24-0ubuntu0.18.04.12
 
@@ -156,25 +156,28 @@ INSERT INTO `positions` (`ID`, `Role`) VALUES
 
 CREATE TABLE `record` (
   `ID` int(10) UNSIGNED NOT NULL,
-  `IDsheet` int(10) UNSIGNED NOT NULL,
+  `IDgsm` int(10) UNSIGNED NOT NULL,
   `IDcar` int(10) UNSIGNED NOT NULL,
+  `IDsheet` int(10) UNSIGNED NOT NULL,
   `IDdriver` int(10) UNSIGNED NOT NULL,
   `NumberPL` varchar(10) COLLATE utf8_bin NOT NULL,
-  `IDgsm` int(10) UNSIGNED NOT NULL,
-  `Liter` decimal(10,3) NOT NULL
+  `Liter` decimal(10,3) NOT NULL,
+  `openMileage` int(10) NOT NULL DEFAULT '0',
+  `closeMileage` int(10) DEFAULT NULL,
+  `recStatus` int(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Дамп данных таблицы `record`
 --
 
-INSERT INTO `record` (`ID`, `IDsheet`, `IDcar`, `IDdriver`, `NumberPL`, `IDgsm`, `Liter`) VALUES
-(1, 1, 1, 1, '1', 1, '1.000'),
-(2, 1, 1, 1, '2', 3, '1.000'),
-(3, 2, 2, 2, '3', 1, '10.000'),
-(4, 2, 4, 2, '4', 3, '10.000'),
-(5, 3, 3, 3, '5', 2, '100.000'),
-(6, 3, 3, 3, '6', 2, '10.000');
+INSERT INTO `record` (`ID`, `IDgsm`, `IDcar`, `IDsheet`, `IDdriver`, `NumberPL`, `Liter`, `openMileage`, `closeMileage`, `recStatus`) VALUES
+(1, 1, 1, 1, 1, '1', '1.000', 0, NULL, 1),
+(2, 3, 1, 1, 1, '2', '1.000', 0, NULL, 1),
+(3, 1, 2, 2, 2, '3', '10.000', 0, NULL, 1),
+(4, 3, 4, 2, 2, '4', '10.000', 0, NULL, 1),
+(5, 2, 3, 3, 3, '5', '100.000', 0, NULL, 1),
+(6, 2, 3, 3, 3, '6', '10.000', 0, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -198,6 +201,18 @@ INSERT INTO `sheet` (`ID`, `NumberSheet`, `DateSheet`, `IDgarage`, `IDsigner`) V
 (1, '111', '2021-09-01', 1, 4),
 (2, '222', '2021-09-01', 2, 4),
 (3, '5', '2022-03-26', 1, 33);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `storehouse`
+--
+
+CREATE TABLE `storehouse` (
+  `ID` int(10) UNSIGNED NOT NULL,
+  `IDgsm` int(10) UNSIGNED NOT NULL,
+  `liters` decimal(10,3) NOT NULL DEFAULT '0.000'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -282,6 +297,12 @@ ALTER TABLE `sheet`
   ADD KEY `IDsigner` (`IDsigner`);
 
 --
+-- Индексы таблицы `storehouse`
+--
+ALTER TABLE `storehouse`
+  ADD PRIMARY KEY (`ID`);
+
+--
 -- Индексы таблицы `worker`
 --
 ALTER TABLE `worker`
@@ -336,6 +357,12 @@ ALTER TABLE `sheet`
   MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT для таблицы `storehouse`
+--
+ALTER TABLE `storehouse`
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT для таблицы `worker`
 --
 ALTER TABLE `worker`
@@ -373,6 +400,12 @@ ALTER TABLE `record`
 ALTER TABLE `sheet`
   ADD CONSTRAINT `sheet_ibfk_1` FOREIGN KEY (`IDgarage`) REFERENCES `garage` (`ID`),
   ADD CONSTRAINT `sheet_ibfk_2` FOREIGN KEY (`IDsigner`) REFERENCES `worker` (`ID`);
+
+--
+-- Ограничения внешнего ключа таблицы `storehouse`
+--
+ALTER TABLE `storehouse`
+  ADD CONSTRAINT `storehouse_ibfk_1` FOREIGN KEY (`ID`) REFERENCES `gsm` (`ID`);
 
 --
 -- Ограничения внешнего ключа таблицы `worker`
