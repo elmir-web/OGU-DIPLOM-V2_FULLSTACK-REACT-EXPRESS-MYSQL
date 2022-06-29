@@ -6,8 +6,8 @@ import CONFIG from "./../../../../CONFIG.json";
 async function deleteStore(statusAccessEditing, loadStoreHouse, storeItem) {
   if (!statusAccessEditing) {
     new Toast({
-      title: "Ошибка при удалении автомобиля",
-      text: "У вашего аккаунта не достаточный уровень доступа, чтобы удалить автомобиль!",
+      title: "Ошибка при удалении гсм со склада",
+      text: "У вашего аккаунта не достаточный уровень доступа, чтобы удалить часть склада!",
       theme: "danger",
       autohide: true,
       interval: 10000,

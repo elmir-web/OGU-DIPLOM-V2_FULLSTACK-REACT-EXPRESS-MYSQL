@@ -17,12 +17,12 @@ router.delete(
   storeHouseController.deleteStore
 );
 router.put(
-  "./storehouse/change",
+  "/storehouse/change",
   roleMiddleware(["Подписант"]),
   storeHouseController.updateStore
 );
 router.put(
-  "./storehouse/create",
+  "/storehouse/create",
   roleMiddleware(["Подписант"]),
   storeHouseController.createStore
 );

@@ -23,7 +23,11 @@ class StoreHouseController {
 
   async getOneStore(req, res) {}
 
-  async updateStore(req, res) {}
+  async updateStore(req, res) {
+    console.log(req.body);
+
+    // TODO: продолжить тут
+  }
 
   async deleteStore(req, res) {
     const idStoreItem = req.params.id;
