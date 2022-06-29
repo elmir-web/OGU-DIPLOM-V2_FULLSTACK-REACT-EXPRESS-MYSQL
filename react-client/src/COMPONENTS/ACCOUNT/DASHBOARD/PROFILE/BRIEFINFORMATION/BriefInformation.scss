@@ -1,3 +1,20 @@
 .BriefInformation {
   width: 100%;
+
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
+
+    a {
+      display: block;
+      text-decoration: none;
+      text-transform: uppercase;
+      color: #000;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 }
