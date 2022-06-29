@@ -17,6 +17,7 @@ import Sheets from "./SHEETS/Sheets";
 import Records from "./RECORDS/Records";
 import GSMDayGarage from "./GSMDAYGARAGE/GsmDayGarage";
 import ReportSheet from "./REPORTSHEET/ReportSheet";
+import StoreHouse from "./STOREHOUSE/StoreHouse";
 
 import CONFIG from "./../../../CONFIG.json";
 
@@ -123,6 +124,9 @@ const Dashboard = ({ workerAccount, setWorkerAccount }) => {
                 <LinkRouter to="workers">Рабочий персонал</LinkRouter>
               </li>
               <li>
+                <LinkRouter to="storehouse">Склад</LinkRouter>
+              </li>
+              <li>
                 <LinkRouter to="sheets">Ведомости</LinkRouter>
               </li>
               <li>
@@ -171,6 +175,7 @@ const Dashboard = ({ workerAccount, setWorkerAccount }) => {
                 />
               }
             />
+            <Route path="storehouse" element={<StoreHouse />} />
             <Route
               path="sheets"
               element={<Sheets workerAccount={workerAccount} />}
