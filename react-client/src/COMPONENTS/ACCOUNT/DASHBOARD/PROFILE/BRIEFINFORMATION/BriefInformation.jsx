@@ -6,13 +6,57 @@ import "./BriefInformation.scss";
 import CONFIG from "./../../../../../CONFIG.json";
 
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import FoundationIcon from "@mui/icons-material/Foundation";
+import ListAltIcon from "@mui/icons-material/ListAlt";
+import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
+import EngineeringIcon from "@mui/icons-material/Engineering";
+import AgricultureIcon from "@mui/icons-material/Agriculture";
+import WarehouseIcon from "@mui/icons-material/Warehouse";
+import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
 
 const BriefInformation = ({ workerAccount }) => {
   let [allSheets, setSheets] = useState([]);
   let [allRecords, setRecords] = useState([]);
+  let [allWorkers, setWorkers] = useState([]);
+  let [allVehicles, setVehicles] = useState([]);
+  let [allAutoGarages, setAutoGarages] = useState([]);
+  let [allTypesGSM, setTypesGSM] = useState([]);
+  let [allAutoBases, setAutoBases] = useState([]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
+    let autoBases = await fetch(`${CONFIG.URL_BACKEND}/api/autobase/get`, {
+      method: "GET",
+    });
+
+    autoBases = await autoBases.json();
+
+    setAutoBases(autoBases);
+
+    let gsm = await fetch(`${CONFIG.URL_BACKEND}/api/type-gsm/get`, {
+      method: "GET",
+    });
+
+    gsm = await gsm.json();
+
+    setTypesGSM(gsm);
+
+    let autoGarages = await fetch(`${CONFIG.URL_BACKEND}/api/autogarage/get`, {
+      method: "GET",
+    });
+
+    autoGarages = await autoGarages.json();
+
+    setAutoGarages(autoGarages);
+
+    let vehicles = await fetch(`${CONFIG.URL_BACKEND}/api/vehicles/get`, {
+      method: "GET",
+    });
+
+    vehicles = await vehicles.json();
+
+    setVehicles(vehicles);
+
     let sheets = await fetch(`${CONFIG.URL_BACKEND}/api/sheets/get`, {
       method: "GET",
     });
@@ -20,7 +64,9 @@ const BriefInformation = ({ workerAccount }) => {
     sheets = await sheets.json();
 
     sheets = sheets.filter((sheet, index) => {
-      return sheet.IDsigner.ID === workerAccount.ID;
+      if (workerAccount?.Function?.ID === 2)
+        return sheet.IDsigner.ID === workerAccount.ID;
+      else return true;
     });
 
     setSheets(sheets);
@@ -32,10 +78,20 @@ const BriefInformation = ({ workerAccount }) => {
     records = await records.json();
 
     records = records.filter((record, index) => {
-      return record?.IDsheet?.IDsigner?.ID === workerAccount.ID;
+      if (workerAccount?.Function?.ID === 2)
+        return record?.IDsheet?.IDsigner?.ID === workerAccount.ID;
+      else return true;
     });
 
     setRecords(records);
+
+    let workers = await fetch(`${CONFIG.URL_BACKEND}/api/workers/get`, {
+      method: "GET",
+    });
+
+    workers = await workers.json();
+
+    setWorkers(workers);
   }, []);
 
   if (workerAccount?.Function?.ID === 2)
@@ -148,6 +204,79 @@ const BriefInformation = ({ workerAccount }) => {
               )}
             </tbody>
           </table>
+        </div>
+      </div>
+    );
+  else if (workerAccount?.Function?.ID === 3)
+    return (
+      <div className="BriefInformation">
+        <div className="BriefInformation__top">
+          <h2>Статистика</h2>
+        </div>
+
+        <div className="BriefInformation__items">
+          <div className="static-item">
+            <FoundationIcon fontSize="large" />
+
+            <div className="item-info">
+              <div className="item-value">{allAutoBases.length}</div>
+              <div className="item-title">Автомобильные базы</div>
+            </div>
+          </div>
+
+          <div className="static-item">
+            <LocalGasStationIcon fontSize="large" />
+
+            <div className="item-info">
+              <div className="item-value">{allTypesGSM.length}</div>
+              <div className="item-title">Виды гсм</div>
+            </div>
+          </div>
+
+          <div className="static-item">
+            <WarehouseIcon />
+
+            <div className="item-info">
+              <div className="item-value">{allAutoGarages.length}</div>
+              <div className="item-title">Все гаражи</div>
+            </div>
+          </div>
+
+          <div className="static-item">
+            <AgricultureIcon fontSize="large" />
+
+            <div className="item-info">
+              <div className="item-value">{allVehicles.length}</div>
+              <div className="item-title">Все автомобили</div>
+            </div>
+          </div>
+
+          <div className="static-item">
+            <EngineeringIcon fontSize="large" />
+
+            <div className="item-info">
+              <div className="item-value">{allWorkers.length}</div>
+              <div className="item-title">Рабочий персонал</div>
+            </div>
+          </div>
+
+          <div className="static-item">
+            <AppRegistrationIcon fontSize="large" />
+
+            <div className="item-info">
+              <div className="item-value">{allSheets.length}</div>
+              <div className="item-title">ведомости</div>
+            </div>
+          </div>
+
+          <div className="static-item">
+            <ListAltIcon fontSize="large" />
+
+            <div className="item-info">
+              <div className="item-value">{allRecords.length}</div>
+              <div className="item-title">путевые листы</div>
+            </div>
+          </div>
         </div>
       </div>
     );
