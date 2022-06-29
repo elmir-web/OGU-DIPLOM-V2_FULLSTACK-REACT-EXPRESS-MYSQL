@@ -84,7 +84,7 @@ class RecordController {
       recStatus,
     } = req.body;
 
-    console.log(closeMileage);
+    console.log("begin", req.body, "end");
 
     const [rowsUpdatedRecord] = await global.connectMySQL.execute(
       `UPDATE record SET IDgsm = '${IDgsm}', IDcar = '${IDcar}', IDsheet = '${IDsheet}', IDdriver = '${IDdriver}', NumberPL = '${NumberPL}', Liter = '${Liter}', openMileage = '${openMileage}', closeMileage = ${

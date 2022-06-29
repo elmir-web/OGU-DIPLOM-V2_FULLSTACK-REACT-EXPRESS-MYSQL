@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Июн 29 2022 г., 08:56
+-- Время создания: Июн 29 2022 г., 09:29
 -- Версия сервера: 5.5.25
 -- Версия PHP: 5.3.13
 
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `base` (
   `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `Name` varchar(50) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 --
 -- Дамп данных таблицы `base`
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `car` (
   PRIMARY KEY (`ID`),
   KEY `IDgarage` (`IDgarage`),
   KEY `IDgsm` (`IDgsm`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS `garage` (
   `IDbase` int(10) unsigned NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `IDbase` (`IDbase`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -101,7 +101,15 @@ CREATE TABLE IF NOT EXISTS `gsm` (
   `Name` varchar(50) COLLATE utf8_bin NOT NULL,
   `ForKilo` decimal(10,3) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=3 ;
+
+--
+-- Дамп данных таблицы `gsm`
+--
+
+INSERT INTO `gsm` (`ID`, `Name`, `ForKilo`) VALUES
+(1, 'Бензин', '0.980'),
+(2, 'Дизтопливо', '0.850');
 
 -- --------------------------------------------------------
 
@@ -139,6 +147,7 @@ CREATE TABLE IF NOT EXISTS `record` (
   `IDdriver` int(10) unsigned NOT NULL,
   `NumberPL` varchar(10) COLLATE utf8_bin NOT NULL,
   `Liter` decimal(10,3) NOT NULL,
+  `usedLiter` decimal(10,3) NOT NULL,
   `openMileage` int(10) NOT NULL DEFAULT '0',
   `closeMileage` int(10) DEFAULT NULL,
   `recStatus` int(1) NOT NULL DEFAULT '1',
@@ -147,7 +156,7 @@ CREATE TABLE IF NOT EXISTS `record` (
   KEY `IDcar` (`IDcar`),
   KEY `IDgsm` (`IDgsm`),
   KEY `IDdriver` (`IDdriver`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -164,7 +173,7 @@ CREATE TABLE IF NOT EXISTS `sheet` (
   PRIMARY KEY (`ID`),
   KEY `IDgarage` (`IDgarage`),
   KEY `IDsigner` (`IDsigner`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -195,14 +204,14 @@ CREATE TABLE IF NOT EXISTS `worker` (
   PRIMARY KEY (`ID`),
   KEY `IDbase` (`IDbase`),
   KEY `Function` (`Function`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=37 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=2 ;
 
 --
 -- Дамп данных таблицы `worker`
 --
 
 INSERT INTO `worker` (`ID`, `FIO`, `loginUser`, `passwordUser`, `Function`, `IDbase`) VALUES
-(36, 'Фамилия Имя Отчество', 'login', 'password', 0, 0);
+(1, 'Кубагушев Эльмир Ирекович', 'ELMIR.WEB', 'ELMIR.PASSWORD', 3, 0);
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц

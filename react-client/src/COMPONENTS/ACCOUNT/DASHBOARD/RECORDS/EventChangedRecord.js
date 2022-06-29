@@ -106,7 +106,54 @@ async function eventChangedRecord(
     return;
   }
 
-  console.log();
+  if (completedObject.Liter < changedRecord.usedLiter) {
+    new Toast({
+      title: "Ошибка при изменении путевого листа",
+      text: `Вы не можете установить количество литров меньше, чем уже выдано!`,
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
+    return;
+  }
+
+  if (
+    !("openMileage" in completedObject) ||
+    completedObject.openMileage === null ||
+    completedObject.openMileage.length < 1 ||
+    completedObject.openMileage.length > 10
+  ) {
+    new Toast({
+      title: "Ошибка при изменении ведомости",
+      text: `Поле ввода пробега на момент открытия не должно быть пустым и в нем должнобыть от 1 до 10 символов (включительно)`,
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
+    return;
+  }
+
+  if (
+    !("closeMileage" in completedObject) ||
+    completedObject.closeMileage === null ||
+    completedObject.closeMileage.length < 1 ||
+    completedObject.closeMileage.length > 10
+  ) {
+    new Toast({
+      title: "Ошибка при изменении ведомости",
+      text: `Поле ввода пробега на момент закрытия не должно быть пустым и в нем должнобыть от 1 до 10 символов (включительно)`,
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
+    return;
+  }
+
+  if (completedObject.closeMileage === "-1") {
+    completedObject.closeMileage = null;
+  }
+
+  completedObject.recStatus = 1;
 
   let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 

@@ -119,6 +119,7 @@ const Records = ({ workerAccount }) => {
               <th>Водитель (ID)</th>
               <th>Номер путевого листа</th>
               <th>Литры</th>
+              <th>Литры: Использ</th>
               <th>Пробег: Открытие</th>
               <th>Пробег: Закрытие</th>
               <th>Статус</th>
@@ -146,6 +147,7 @@ const Records = ({ workerAccount }) => {
                     </td>
                     <td>{record.NumberPL}</td>
                     <td>{record.Liter}</td>
+                    <td>{record.usedLiter}</td>
                     <td>{record.openMileage}</td>
                     <td>
                       {record.closeMileage === null
