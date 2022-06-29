@@ -4,6 +4,8 @@ import TextField from "@mui/material/TextField";
 
 import "./Profile.scss";
 
+import BriefInformation from "./BRIEFINFORMATION/BriefInformation";
+
 import changeFIO from "./ChangeFIO";
 import changeFIOEvent from "./EventChangeFIO";
 import changeAccessData from "./ChangeAccessData";
@@ -167,6 +169,8 @@ const Profile = ({ workerAccount, setWorkerAccount }) => {
           </div>
         )}
       </div>
+
+      <BriefInformation workerAccount={workerAccount} />
     </div>
   );
 };

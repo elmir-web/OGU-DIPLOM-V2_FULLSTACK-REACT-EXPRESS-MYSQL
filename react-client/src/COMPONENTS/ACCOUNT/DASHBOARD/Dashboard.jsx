@@ -138,6 +138,7 @@ const Dashboard = ({ workerAccount, setWorkerAccount }) => {
               </li>
             </ul>
           </nav>
+
           <button onClick={dashboardExit} className="header__exit">
             Выход
           </button>
