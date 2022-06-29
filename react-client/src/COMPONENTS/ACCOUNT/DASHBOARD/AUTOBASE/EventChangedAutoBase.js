@@ -23,8 +23,6 @@ async function eventChangedAutoBase(
 
   let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
-  console.log(tempUserAuthCookie);
-
   let tempChanged = {
     ...changedAutoBase,
     Name: inputNameAutoBase,

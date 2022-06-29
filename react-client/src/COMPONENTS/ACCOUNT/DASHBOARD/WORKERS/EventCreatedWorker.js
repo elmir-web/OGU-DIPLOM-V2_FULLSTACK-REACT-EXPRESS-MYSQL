@@ -91,8 +91,6 @@ async function eventCreatedWorker(createWorker, loadWorkers, setCreateWorker) {
   }
   let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
-  console.log(createWorker);
-
   let responseFetch = await fetch(`${CONFIG.URL_BACKEND}/api/worker/create`, {
     method: "POST",
     headers: {

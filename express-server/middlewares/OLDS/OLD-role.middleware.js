@@ -65,8 +65,6 @@ module.exports = function (roles) {
         }
       }
 
-      console.log("hasRole: " + hasRole);
-
       // если роли так и не подошли
       if (!hasRole) {
         return res.status(403).json({ access: false, message: "Нет доступа" });

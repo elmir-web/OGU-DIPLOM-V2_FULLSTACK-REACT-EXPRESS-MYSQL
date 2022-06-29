@@ -34,8 +34,6 @@ async function deleteAutoBase(
   const { ok, status } = responseFetch;
   responseFetch = await responseFetch.json();
 
-  console.log(ok, status, responseFetch);
-
   if (ok === false && status === 400) {
     new Toast({
       title: "Ошибка при удалении автомобильной базы",

@@ -66,8 +66,6 @@ async function eventChangedWorker(
     Function: inputObjectWorker.Function.ID,
   };
 
-  console.log(changedThisWorker);
-
   let responseFetch = await fetch(`${CONFIG.URL_BACKEND}/api/worker/change`, {
     method: "PUT",
     headers: {

@@ -48,8 +48,6 @@ async function eventChangedTypeGSM(
   const { ok, status } = responseFetch;
   responseFetch = await responseFetch.json();
 
-  console.log(ok, status, responseFetch);
-
   setChangedGSM(null);
   setInputObjectGSM({
     ID: null,

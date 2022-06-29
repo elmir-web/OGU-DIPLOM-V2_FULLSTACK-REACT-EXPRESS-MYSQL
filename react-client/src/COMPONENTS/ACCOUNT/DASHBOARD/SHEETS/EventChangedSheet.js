@@ -48,8 +48,6 @@ async function eventChangedSheet(
     return;
   }
 
-  console.log(tempObjectChangedSheetSend);
-
   let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
   let responseFetch = await fetch(`${CONFIG.URL_BACKEND}/api/sheet/change/`, {

@@ -119,8 +119,6 @@ async function eventCreatedAuto(loadVehicles, createVehicle, setCreateVehicle) {
       interval: 10000,
     });
 
-    console.log(createVehicle.expense);
-
     return;
   }
 
