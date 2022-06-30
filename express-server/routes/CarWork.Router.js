@@ -9,10 +9,5 @@ router.get(
   roleMiddleware(["Водитель"]),
   CarWorkController.getAccess
 );
-router.put(
-  "/carwork/change",
-  roleMiddleware(["Водитель"]),
-  CarWorkController.change
-);
 
 module.exports = router;
