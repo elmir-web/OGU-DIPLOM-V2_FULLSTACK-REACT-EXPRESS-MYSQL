@@ -21,6 +21,7 @@ const workersRouter = require("./routes/Worker.Router");
 const sheetRouter = require("./routes/Sheet.Router");
 const recordRouter = require("./routes/Record.Router");
 const reportRouter = require("./routes/Report.Router");
+const carWorkRouter = require("./routes/CarWork.Router");
 
 // __________________________________________________ ОБЪЕКТЫ
 const app = express(); // Создаем приложение Express JS
@@ -104,3 +105,4 @@ app.use("/api", workersRouter);
 app.use("/api", sheetRouter);
 app.use("/api", recordRouter);
 app.use("/api", reportRouter);
+app.use("/api", carWorkRouter);

@@ -47,6 +47,10 @@ class VehicleController {
       `SELECT * FROM car WHERE ID = ${idVeh}`
     );
 
+    rowsAllVeh[0].IDgsm = await global.funcRequest(
+      `/api/type-gsm/get/${rowsAllVeh[0].IDgsm}`
+    );
+
     rowsAllVeh[0].IDgarage = await global.funcRequest(
       `/api/autogarage/get/${rowsAllVeh[0].IDgarage}`
     );

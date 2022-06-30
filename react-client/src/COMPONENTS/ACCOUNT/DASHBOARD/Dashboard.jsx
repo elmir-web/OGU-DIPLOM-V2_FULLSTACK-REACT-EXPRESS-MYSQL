@@ -18,6 +18,7 @@ import Records from "./RECORDS/Records";
 import GSMDayGarage from "./GSMDAYGARAGE/GsmDayGarage";
 import ReportSheet from "./REPORTSHEET/ReportSheet";
 import StoreHouse from "./STOREHOUSE/StoreHouse";
+import CarWork from "./CARWORK/CarWork";
 
 import CONFIG from "./../../../CONFIG.json";
 
@@ -133,6 +134,9 @@ const Dashboard = ({ workerAccount, setWorkerAccount }) => {
                 <LinkRouter to="records">Путевые листы</LinkRouter>
               </li>
               <li>
+                <LinkRouter to="carwork">Работа с автомобилем</LinkRouter>
+              </li>
+              <li>
                 <LinkRouter to="gsm-day-garage">
                   ГСМ за день по гаражу
                 </LinkRouter>
@@ -183,6 +187,10 @@ const Dashboard = ({ workerAccount, setWorkerAccount }) => {
             <Route
               path="records"
               element={<Records workerAccount={workerAccount} />}
+            />
+            <Route
+              path="carwork"
+              element={<CarWork workerAccount={workerAccount} />}
             />
             <Route path="gsm-day-garage" element={<GSMDayGarage />} />
             <Route path="report-sheet" element={<ReportSheet />} />

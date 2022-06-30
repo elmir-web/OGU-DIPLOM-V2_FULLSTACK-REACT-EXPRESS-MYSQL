@@ -72,7 +72,7 @@ class ReportController {
     sheet
     INNER JOIN garage ON garage.ID = sheet.IDgarage
     INNER JOIN base ON base.ID = garage.IDbase
-    INNER JOIN worker ON base.ID = worker.IDbase
+    INNER JOIN worker ON base.ID = worker.IDbase and worker.ID = sheet.IDsigner
     where sheet.ID = ${idSheet}`);
 
     reqArraySheetInfo.push(requestReportHeaderRows);

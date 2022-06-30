@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Июн 29 2022 г., 17:06
+-- Время создания: Июн 30 2022 г., 09:58
 -- Версия сервера: 5.5.25
 -- Версия PHP: 5.3.13
 
@@ -216,15 +216,15 @@ CREATE TABLE IF NOT EXISTS `storehouse` (
   `liters` decimal(10,3) NOT NULL DEFAULT '0.000',
   PRIMARY KEY (`ID`),
   KEY `IDgsm` (`IDgsm`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=8 ;
 
 --
 -- Дамп данных таблицы `storehouse`
 --
 
 INSERT INTO `storehouse` (`ID`, `IDgsm`, `liters`) VALUES
-(2, 2, '6000.000'),
-(3, 1, '5000.000');
+(4, 1, '5450.100'),
+(5, 2, '5500.000');
 
 -- --------------------------------------------------------
 
