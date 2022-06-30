@@ -23,6 +23,7 @@ async function beginUpdateVeh(
 
     setChangeInputStoreItem({
       ID: null,
+      IDgsm: null,
       liters: null,
     });
   } else if (
@@ -34,6 +35,7 @@ async function beginUpdateVeh(
 
     setChangeInputStoreItem({
       ID: null,
+      IDgsm: null,
       liters: null,
     });
   } else {

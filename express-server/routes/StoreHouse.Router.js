@@ -21,7 +21,7 @@ router.put(
   roleMiddleware(["Подписант"]),
   storeHouseController.updateStore
 );
-router.put(
+router.post(
   "/storehouse/create",
   roleMiddleware(["Подписант"]),
   storeHouseController.createStore

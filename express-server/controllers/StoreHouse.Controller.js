@@ -3,7 +3,19 @@ class StoreHouseController {
     return res.status(200).json({ access: true, message: "Доступ открыт" });
   }
 
-  async createStore(req, res) {}
+  async createStore(req, res) {
+    const { IDgsm, liters } = req.body;
+
+    await global.connectMySQL.execute(
+      `INSERT INTO storehouse (IDgsm, liters) VALUES ('${IDgsm}', '${liters}')`
+    );
+
+    res
+      .status(200)
+      .json(
+        `Элемент склада (IDgsm: "${IDgsm}", liters.номер: "${liters}") создан.`
+      );
+  }
 
   async getStores(req, res) {
     let [rowsAllStores] = await global.connectMySQL.execute(
@@ -24,9 +36,19 @@ class StoreHouseController {
   async getOneStore(req, res) {}
 
   async updateStore(req, res) {
-    console.log(req.body);
+    const { ID, IDgsm, liters } = req.body;
 
-    // TODO: продолжить тут
+    const [rowsUpdatedStoreItem] = await global.connectMySQL.execute(
+      `UPDATE storehouse SET IDgsm = '${IDgsm}', liters = '${liters}' WHERE ID = ${ID}`
+    );
+
+    if (rowsUpdatedStoreItem["affectedRows"])
+      res
+        .status(200)
+        .json(
+          `Элемент склада (ID: "${ID}", IDgsm: "${IDgsm}", liters: "${liters}" изменен`
+        );
+    else res.status(400).json(`Элемент склада с ID: ${ID} не изменен`);
   }
 
   async deleteStore(req, res) {

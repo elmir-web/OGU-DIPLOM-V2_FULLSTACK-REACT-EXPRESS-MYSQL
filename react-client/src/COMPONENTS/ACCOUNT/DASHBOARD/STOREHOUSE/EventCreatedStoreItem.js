@@ -3,19 +3,25 @@ import Toast from "./../../../../Toast";
 
 import CONFIG from "./../../../../CONFIG.json";
 
-async function eventChangedStoreHouse(
+async function eventCreatedStoreItem(
   loadStoreHouse,
-  changeInputStoreItem,
-  setChangedStoreItem,
-  setChangeInputStoreItem
+  createStoreItem,
+  setCreateStoreItem
 ) {
-  if (
-    !("IDgsm" in changeInputStoreItem) ||
-    changeInputStoreItem.IDgsm === -1 ||
-    changeInputStoreItem.IDgsm === null
-  ) {
+  if (!createStoreItem) {
     new Toast({
-      title: "Ошибка при изменении элемента склада",
+      title: "Ошибка при создании элемента склада",
+      text: "В поля ввода ничего не введено!",
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
+    return;
+  }
+
+  if (!("IDgsm" in createStoreItem) || createStoreItem.IDgsm === -1) {
+    new Toast({
+      title: "Ошибка при создании элемента склада",
       text: `Вид ГСМ не выбран`,
       theme: "danger",
       autohide: true,
@@ -25,11 +31,11 @@ async function eventChangedStoreHouse(
   }
 
   if (
-    !("liters" in changeInputStoreItem) ||
-    !window.isValidDouble(changeInputStoreItem.liters)
+    !("liters" in createStoreItem) ||
+    !window.isValidDouble(createStoreItem.liters)
   ) {
     new Toast({
-      title: "Ошибка при изменении элемента склада",
+      title: "Ошибка при создании элемента склада",
       text: `Поле ввода литров не должно быть пустым и должно иметь в себе число вида 3.54`,
       theme: "danger",
       autohide: true,
@@ -41,30 +47,25 @@ async function eventChangedStoreHouse(
   let tempUserAuthCookie = Cookies.get("OGU_DIPLOM_COOKIE_AUTHTOKEN");
 
   let responseFetch = await fetch(
-    `${CONFIG.URL_BACKEND}/api/storehouse/change/`,
+    `${CONFIG.URL_BACKEND}/api/storehouse/create`,
     {
-      method: "PUT",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${tempUserAuthCookie}`,
       },
-      body: JSON.stringify(changeInputStoreItem),
+      body: JSON.stringify(createStoreItem),
     }
   );
 
   const { ok, status } = responseFetch;
   responseFetch = await responseFetch.json();
 
-  setChangedStoreItem(null);
-  setChangeInputStoreItem({
-    ID: null,
-    IDgsm: null,
-    liters: null,
-  });
+  setCreateStoreItem(null);
 
   if (ok === false && status === 400) {
     new Toast({
-      title: "Ошибка при изменении автомобиля",
+      title: "Ошибка при создании автомобиля",
       text: responseFetch,
       theme: "danger",
       autohide: true,
@@ -84,4 +85,4 @@ async function eventChangedStoreHouse(
   loadStoreHouse();
 }
 
-export default eventChangedStoreHouse;
+export default eventCreatedStoreItem;

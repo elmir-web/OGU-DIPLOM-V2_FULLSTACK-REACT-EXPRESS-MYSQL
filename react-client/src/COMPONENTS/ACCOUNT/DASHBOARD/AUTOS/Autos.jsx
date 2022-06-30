@@ -318,6 +318,7 @@ const Autos = ({}) => {
                 });
               }}
             />
+
             <FormControl fullWidth sx={{ mt: 1 }}>
               <InputLabel id="auto-create-select-auto-garage">
                 Выберите вид ГСМ
@@ -361,6 +362,7 @@ const Autos = ({}) => {
                 })}
               </Select>
             </FormControl>
+
             <FormControl fullWidth sx={{ mt: 1 }}>
               <InputLabel id="auto-create-select-auto-garage">
                 Выберите автогараж
