@@ -9,5 +9,10 @@ router.get(
   roleMiddleware(["Водитель"]),
   CarWorkController.getAccess
 );
+router.get(
+  "/carwork/my-cars/get/worker/:id",
+  roleMiddleware(["Водитель"]),
+  CarWorkController.getMyCars
+);
 
 module.exports = router;
