@@ -13,6 +13,7 @@ import EngineeringIcon from "@mui/icons-material/Engineering";
 import AgricultureIcon from "@mui/icons-material/Agriculture";
 import WarehouseIcon from "@mui/icons-material/Warehouse";
 import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
+import GarageIcon from "@mui/icons-material/Garage";
 
 const BriefInformation = ({ workerAccount }) => {
   let [allSheets, setSheets] = useState([]);
@@ -22,6 +23,7 @@ const BriefInformation = ({ workerAccount }) => {
   let [allAutoGarages, setAutoGarages] = useState([]);
   let [allTypesGSM, setTypesGSM] = useState([]);
   let [allAutoBases, setAutoBases] = useState([]);
+  const [storeHouse, SetStoreHouse] = useState([]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
@@ -56,6 +58,14 @@ const BriefInformation = ({ workerAccount }) => {
     vehicles = await vehicles.json();
 
     setVehicles(vehicles);
+
+    let storeItems = await fetch(`${CONFIG.URL_BACKEND}/api/storehouse/get`, {
+      method: "GET",
+    });
+
+    storeItems = await storeItems.json();
+
+    SetStoreHouse(storeItems);
 
     let sheets = await fetch(`${CONFIG.URL_BACKEND}/api/sheets/get`, {
       method: "GET",
@@ -234,7 +244,7 @@ const BriefInformation = ({ workerAccount }) => {
           </div>
 
           <div className="static-item">
-            <WarehouseIcon />
+            <GarageIcon fontSize="large" />
 
             <div className="item-info">
               <div className="item-value">{allAutoGarages.length}</div>
@@ -257,6 +267,15 @@ const BriefInformation = ({ workerAccount }) => {
             <div className="item-info">
               <div className="item-value">{allWorkers.length}</div>
               <div className="item-title">Рабочий персонал</div>
+            </div>
+          </div>
+
+          <div className="static-item">
+            <WarehouseIcon fontSize="large" />
+
+            <div className="item-info">
+              <div className="item-value">{storeHouse.length}</div>
+              <div className="item-title">Элементов на складе</div>
             </div>
           </div>
 

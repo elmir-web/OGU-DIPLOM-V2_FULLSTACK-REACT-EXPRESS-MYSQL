@@ -57,13 +57,13 @@ const StoreHouse = () => {
 
     setStatusAccessEditing(tempGetAccess.access);
 
-    let vehicles = await fetch(`${CONFIG.URL_BACKEND}/api/storehouse/get`, {
+    let storeItems = await fetch(`${CONFIG.URL_BACKEND}/api/storehouse/get`, {
       method: "GET",
     });
 
-    vehicles = await vehicles.json();
+    storeItems = await storeItems.json();
 
-    SetStoreHouse(vehicles);
+    SetStoreHouse(storeItems);
   };
 
   useEffect(loadStoreHouse, []);
