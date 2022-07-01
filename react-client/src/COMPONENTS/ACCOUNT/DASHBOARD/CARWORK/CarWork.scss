@@ -1,3 +1,24 @@
 .CarWork {
   width: 100%;
+
+  &__items {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 1%;
+  }
+
+  &__item {
+    width: 48%;
+    background-color: #f6f5fa;
+    border: 1px solid #ede8f0;
+    border-radius: 5px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    padding-left: 35px;
+    padding-right: 35px;
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
+  }
 }

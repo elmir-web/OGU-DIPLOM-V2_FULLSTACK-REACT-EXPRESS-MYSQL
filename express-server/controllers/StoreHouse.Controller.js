@@ -33,7 +33,9 @@ class StoreHouseController {
     res.status(200).json(rowsAllStores);
   }
 
-  async getOneStore(req, res) {}
+  async getOneStore(req, res) {
+    const idSheet = req.params.id;
+  }
 
   async updateStore(req, res) {
     const { ID, IDgsm, liters } = req.body;

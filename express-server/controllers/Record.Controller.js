@@ -79,13 +79,14 @@ class RecordController {
       IDdriver,
       NumberPL,
       Liter,
+      usedLiter,
       openMileage,
       closeMileage,
       recStatus,
     } = req.body;
 
     const [rowsUpdatedRecord] = await global.connectMySQL.execute(
-      `UPDATE record SET IDgsm = '${IDgsm}', IDcar = '${IDcar}', IDsheet = '${IDsheet}', IDdriver = '${IDdriver}', NumberPL = '${NumberPL}', Liter = '${Liter}', openMileage = '${openMileage}', closeMileage = ${
+      `UPDATE record SET IDgsm = '${IDgsm}', IDcar = '${IDcar}', IDsheet = '${IDsheet}', IDdriver = '${IDdriver}', NumberPL = '${NumberPL}', Liter = '${Liter}', usedLiter = '${usedLiter}', openMileage = '${openMileage}', closeMileage = ${
         closeMileage === null ? `NULL` : `${closeMileage}`
       }, recStatus = '${recStatus}' WHERE ID = '${ID}'`
     );
@@ -94,7 +95,7 @@ class RecordController {
       res
         .status(200)
         .json(
-          `Путевой лист (ID: ${ID} ID ГСМ: "${IDgsm}", ID автомобиля: "${IDcar}", ID ведомости: "${IDsheet}", ID водителя: "${IDdriver}", Номер путевого листа: "${NumberPL}", Литры: "${Liter}", Пробег на момент открытия путевого листа: "${closeMileage}", Пробег на момент закрытия путевого листа: "${recStatus}", Статус путевого листа: "${recStatus}") изменен`
+          `Путевой лист (ID: ${ID} ID ГСМ: "${IDgsm}", ID автомобиля: "${IDcar}", ID ведомости: "${IDsheet}", ID водителя: "${IDdriver}", Номер путевого листа: "${NumberPL}", Литры: "${Liter}" (Исп.: ${usedLiter}), Пробег на момент открытия путевого листа: "${closeMileage}", Пробег на момент закрытия путевого листа: "${recStatus}", Статус путевого листа: "${recStatus}") изменен`
         );
     else res.status(400).json(`Путеовой лист с ID: ${ID} не изменен`);
   }
