@@ -1,0 +1,226 @@
+.Dashboard {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.Dashboard .header {
+  background-color: RGB(12, 108, 182);
+  height: 73px;
+}
+
+.Dashboard .header__nav {
+  overflow-x: auto;
+  scrollbar-width: none;
+  background-color: #fff;
+  padding-top: 15px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  border-radius: 10px;
+}
+
+.Dashboard .header__nav::-webkit-scrollbar {
+  height: 0;
+  opacity: 0;
+}
+
+.Dashboard .header__nav ul {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.Dashboard .header__nav ul li {
+  list-style-type: none;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  -webkit-box-flex: 0;
+      -ms-flex-positive: 0;
+          flex-grow: 0;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  margin-right: 50px;
+  border-bottom: 1px solid RGB(12, 108, 182);
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 5px;
+}
+
+.Dashboard .header__nav ul li:hover {
+  background-color: RGB(12, 108, 182);
+}
+
+@media (max-width: 767px) {
+  .Dashboard .header__nav ul li {
+    margin-right: 20px;
+  }
+}
+
+.Dashboard .header__nav ul li a {
+  text-decoration: none;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  display: inline-block;
+  font-size: 20px;
+  color: RGB(12, 108, 182);
+}
+
+.Dashboard .header__nav ul li a:hover {
+  background-color: RGB(12, 108, 182);
+  color: white;
+}
+
+@media (max-width: 767px) {
+  .Dashboard .header__nav ul li a {
+    font-size: 14px;
+  }
+}
+
+.Dashboard .header__exit {
+  margin-left: 20px;
+  font-size: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  background-color: inherit;
+  border: 0;
+  color: #fff;
+  border-bottom: 1px solid #fff;
+}
+
+@media (max-width: 767px) {
+  .Dashboard .header__exit {
+    font-size: 14px;
+  }
+}
+
+.Dashboard .header__exit:hover {
+  color: yellow;
+  border-bottom: 1px solid yellow;
+}
+
+.Dashboard .header .central-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  height: 100%;
+}
+
+.Dashboard .main {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.Dashboard .main .central-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.Dashboard .table-wrapper {
+  overflow: auto;
+}
+
+.Dashboard .table-wrapper table {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+  font-size: 20px;
+  background: inherit;
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.Dashboard .table-wrapper th {
+  font-weight: normal;
+  color: #039;
+  border-bottom: 2px solid #6678b1;
+  padding: 10px 8px;
+}
+
+.Dashboard .table-wrapper td {
+  color: #669;
+  padding: 9px 8px;
+  -webkit-transition: 0.3s linear;
+  transition: 0.3s linear;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.Dashboard .table-wrapper td .button-table {
+  font-size: 12px;
+  margin-right: 5px;
+  background-color: inherit;
+  border: 0;
+  border-bottom: 2px solid #6678b1;
+  color: #669;
+  outline: 0;
+}
+
+.Dashboard .table-wrapper td .button-table:hover {
+  border-bottom: 2px solid white;
+}
+
+.Dashboard .table-wrapper td .button-table:active {
+  border-bottom: 2px solid red;
+}
+
+.Dashboard .table-wrapper td .button-table:last-child {
+  margin-right: 0;
+}
+
+.Dashboard .table-wrapper tr:hover td {
+  color: #6699ff;
+}
+
+.Dashboard .table-wrapper .table-buttons button:nth-child(2) {
+  margin-left: 8px;
+  margin-top: 0;
+}
+
+@media (max-width: 767px) {
+  .Dashboard .table-wrapper .table-buttons {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
+  .Dashboard .table-wrapper .table-buttons button:nth-child(2) {
+    margin-left: 0;
+    margin-top: 8px;
+  }
+  .Dashboard .table-wrapper .table-buttons button:nth-child(3) {
+    margin-left: 0;
+    margin-top: 8px;
+  }
+}

@@ -1,0 +1,45 @@
+.Profile {
+  width: 100%;
+}
+
+.Profile .profile-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-column-gap: 50px;
+          column-gap: 50px;
+}
+
+@media (max-width: 700px) {
+  .Profile .profile-wrapper {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+  }
+}
+
+.Profile .profile-wrapper .profile-avatar {
+  width: 100px;
+}
+
+.Profile .profile-wrapper .content-main {
+  width: 100%;
+}
+
+@media (max-width: 700px) {
+  .Profile .profile-wrapper .content-main {
+    margin-top: 25px;
+  }
+}
+
+.Profile .settings-wrapper {
+  margin-top: 25px;
+}
+
+.Profile .access-form {
+  margin-top: 25px;
+}

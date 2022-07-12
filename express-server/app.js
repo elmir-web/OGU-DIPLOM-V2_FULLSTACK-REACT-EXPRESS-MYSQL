@@ -10,9 +10,9 @@ const {
   SERVER_MYSQL_SETTINGS,
 } = require("./ServerConfig.json");
 
+const autoBaseRouter = require("./routes/AutoBase.Router");
 const accountRouter = require(`./routes/Account.Router`);
 const positionRouter = require(`./routes/Position.Router`);
-const autoBaseRouter = require("./routes/AutoBase.Router");
 const typesGSMRouter = require("./routes/TypesGSM.Router");
 const autoGarageRouter = require("./routes/AutoGarage.Router");
 const vehicleRouter = require("./routes/Vehicle.Router");
