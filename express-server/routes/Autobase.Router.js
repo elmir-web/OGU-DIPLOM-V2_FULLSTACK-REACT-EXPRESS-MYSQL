@@ -25,6 +25,6 @@ router.post(
   "/autobase/create",
   roleMiddleware(["Админ"]),
   autoBaseController.createAutoBase
-);
+); // перенесено
 
 module.exports = router;
